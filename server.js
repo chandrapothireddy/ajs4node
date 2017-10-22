@@ -25,39 +25,7 @@ var env = process.env.NODE_ENV || 'development',
 var http = require('http');
 
 var https = require('https');
-var privateKey = fs.readFileSync(config.root + '/ssl/testleaserep.com-key.pem');
-var certificate = fs.readFileSync(config.root + '/ssl/4bd8600939045488.crt');
-var certAuth = fs.readFileSync(config.root + '/ssl/gd_bundle-g2-g1.crt');
-// R2 #9 change, May 2016.
-var opt = {
-	key: privateKey,
-	cert: certificate,
-	ca: certAuth,
-	ciphers: [
-		"ECDHE-RSA-AES128-GCM-SHA256",
-		"ECDHE-ECDSA-AES128-GCM-SHA256",
-		"ECDHE-RSA-AES256-GCM-SHA384",
-		"ECDHE-ECDSA-AES256-GCM-SHA384",
-		"DHE-RSA-AES128-GCM-SHA256",
-		"ECDHE-RSA-AES128-SHA256",
-		"DHE-RSA-AES128-SHA256",
-		"ECDHE-RSA-AES256-SHA384",
-		"DHE-RSA-AES256-SHA384",
-		"ECDHE-RSA-AES256-SHA256",
-		"DHE-RSA-AES256-SHA256",		
-		"HIGH",
-		"!aNULL",
-		"!eNULL",
-		"!EXPORT",
-		"!DES",
-		"!RC4",
-		"!MD5",
-		"!PSK",
-		"!SRP",
-		"!CAMELLIA"].join(':'),
-	honorCipherOrder: true
-	//secureProtocol: "TLSv1_method"
-};
+
 //Bootstrap db connection
 //var db = mongoose.connect(config.db);
 
@@ -132,7 +100,6 @@ app.use(router);
 var port = process.env.PORT || 3000;
 config.port = port; // store for later because we cant get port fro req. object :(
 //var ip = '127.0.0.1';
-//ip = '10.1.10.100';
 
 db.once('open', function(err) { 
   if(err) throw err;
