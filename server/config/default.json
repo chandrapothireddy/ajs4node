@@ -1,0 +1,12 @@
+{       
+		"example":{
+		"configs":{
+		"db": "mongodb://localhost/exampledb",
+        "protocol": "http://",
+        "secureProtocol": "https://",
+        "host": "developmentexample.com",
+        "port": "443",
+        "siteUrl": "https://developmentexample.com"
+       	}
+	}
+    }
