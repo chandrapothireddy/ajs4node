@@ -55,3 +55,23 @@ $scope.myConfig = {
 						  });
 				  
 			  }
+
+			  
+			  
+			  db.collection('agendaJobs').update({
+  lockedAt: {
+    $exists: true
+  }
+}, {
+  $set: {
+    lockedAt: null
+  }
+}, function(e, numUnlocked) {
+  if (e) {
+    console.log(e);
+  }
+  return console.log(`Unlocked ${numUnlocked} jobs.`);
+});
+https://abdelhady.net/2015/02/06/solved-restarting-node-server-may-stop-any-recurring-agenda-jobs/
+			  
+			  
