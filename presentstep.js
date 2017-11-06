@@ -1,3 +1,12 @@
+//html
+
+<cron-selection ng-model="myOutput" config="myConfig"></cron-selection>
+<input type="text"  ng-model="outdata" />
+<span ng-bind="myOutput"></span>
+      <input type="submit" ng-click="cronJ()" />
+
+
+
 //client controller
 
 $scope.myConfig = {
