@@ -627,3 +627,28 @@ angular.module('angular-cron-jobs')
 }]);
     
         
+///////
+
+var out1 = req.body.cronM;
+
+var data = out1.split(" ");
+
+if(data[3]!='*')
+{
+var dats = data[3];
+var datap = dats.split(",");
+var out=[];
+for(var i=0;i<datap.length;i++){
+var out2=parseInt(datap[i])+1;
+out.push(out2);
+
+}
+
+
+
+var out1 = data[0]+' '+data[1]+' '+data[2]+' '+''+' '+out+' '+data[4];
+}
+
+
+
+console.log('interval: ',prettyCron.toString(out1));
