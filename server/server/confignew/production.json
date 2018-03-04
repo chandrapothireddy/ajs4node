@@ -1,0 +1,9 @@
+{
+        
+		"example":{
+		"configs":{
+        "host": "prodexample.com",
+        "siteUrl": "https://prodexample.com"
+		}
+	}
+    }
