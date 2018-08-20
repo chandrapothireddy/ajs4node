@@ -1,0 +1,441 @@
+<div class="row has-title-bar" unsaved-warning-group>
+
+    <div class="span2 sidebar" ng-include="'app/templates/nav.html'"></div>
+    
+    <div class="span10 offset2">
+        
+        <div class="row title-bar">
+            <div class="span10">
+                <h2><i class="icon icon-briefcase"></i> {{vendor.name || 'New Vendor'}}</h2>
+                <ul class="nav nav-tabs">
+                    <li ng-repeat="tab in tabs" 
+                      ng-class="{active: isActiveTab($index), disabled: !vendor._id && $index != 0}"
+                      can-do-action="{{tab.permission}}">
+                      <a ng-show="tab.active" ng-click="changeTab($index, tab.name)">{{tab.name}}</a>
+                    </li>
+                </ul>
+                <div class="actions">
+                    <a ng-show="isToolActive('quoter')" class="btn btn-primary" target="_blank" ng-href="{{linkToTool(vendor.slug, 'quoter')}}"><i class="icon icon-comments-alt"></i> Launch Quoter Tool</a>
+
+                    <a class="btn btn-primary" id="cancel"  href="#/dashboard/vendors" ><i class="icon icon-remove-sign"></i>Close</a>
+                    <button 
+                        type="submit" 
+                        class="btn btn-success" 
+                        id="save" 
+                        ng-show="basicForm.$dirty || MarlinRepForm.$dirty || VendorSalesRepForm.$dirty || rateForm.$dirty || toolForm.$dirty || apiForm.$dirty ||  locationForm.$dirty || customizeForm.$dirty"
+                        ng-click="save(false)"><i class="icon icon-ok-sign"></i>Save</button>
+                </div>
+            </div>
+        </div>
+
+        <form name="basicForm" class="row" ng-show="isActiveTab(0)" unsaved-warning-form>
+            <div class="span9 clearfix alert alert-error" ng-show="basicForm.FacultyErrors && showGlobalErrorMsg(basicForm.FacultyErrors)">Form not saved. Please address the errors below.</div>
+            
+            <div class="span10 clearfix"> 
+                <h3>Basic Info</h3>
+            </div>
+
+            <div class="span5">
+                <label>Vendor Logo</label>
+                <img class="img-rounded img-large" ng-src="{{vendor.logo.original}}" default-image="vendor" title="Logo" /><br/><br/>
+                <button ng-click="pickImage(); basicForm.$setDirty();" class="btn btn-primary">Pick Logo</button>
+
+                <br /><br />
+                
+                <label>Vendor Name</label>
+
+                <input name="vendor.name" type="text" id="name" placeholder="Name" ng-model="vendor.name" required ng-blur="Validator.validateField(basicForm['vendor.name'], basicForm)" ng-change="Validator.removeInvalidation(basicForm['vendor.name'], basicForm)">
+
+                <div ng-show="basicForm.FacultyErrors['vendor.name']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['vendor.name']}}
+                </div>
+                <!-- <input type="text" placeholder="Vendor ID" disabled="disabled" ng-model="vendor._id"> -->
+                
+                <label>Website Url</label>
+                <input 
+                    name="vendor.website" 
+                    type="text" 
+                    class="large" 
+                    placeholder="https://www.google.com" 
+					ui-validate="{websiteName: 'Validator.validateWebsite($value)'}"
+                    ng-model="vendor.website"
+                    ng-blur="Validator.validateField(basicForm['vendor.website'], basicForm)" 
+					ng-change="Validator.removeInvalidation(basicForm['vendor.website'], basicForm)">
+
+                <div ng-show="basicForm.FacultyErrors['vendor.website']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['vendor.website']}}
+                </div>
+                
+                <label>Business Phone Number</label>
+                <input name="vendor.businessPhone" type="text" class="medium" number-only 
+				placeholder="Business Phone" 
+				class="input-block" 
+                ui-validate="{phone: 'Validator.validatePhone($value)'}"
+				ng-blur="Validator.validateField(basicForm['vendor.businessPhone'], basicForm)" 
+				ng-change="Validator.removeInvalidation(basicForm['vendor.businessPhone'], basicForm)"
+				ng-model="vendor.businessPhone" />
+
+                <div ng-show="basicForm.FacultyErrors['vendor.businessPhone']" class="alert alert-error alert-tooltip">                   {{basicForm.FacultyErrors['vendor.businessPhone']}}
+                </div>
+				
+            </div>
+            
+            <div class="span5">            
+                <label>Address 1</label>
+
+                <input name="vendor.businessAddress.address1" type="text" placeholder="Address 1" ng-model="vendor.businessAddress.address1">
+                
+                <label>Address 2</label>
+                <input name="vendor.businessAddress.address2" type="text" placeholder="Address 2" ng-model="vendor.businessAddress.address2">
+                
+                <label>City</label>
+                <input name="vendor.businessAddress.city" type="text" placeholder="City" ng-model="vendor.businessAddress.city">
+                <!-- <input type="text" placeholder="State" ng-model="vendor.state"> -->
+                <label>State</label>
+
+                <select name="vendor.businessAddress.state" ng-model="vendor.businessAddress.state" ng-options="state.abbreviation as state.name for state in states"></select>
+                
+                <label>Zip</label>
+
+                <input name="vendor.businessAddress.zip" type="text" class="medium" placeholder="Zip" number-only ng-model="vendor.businessAddress.zip" ui-validate="{zip: 'Validator.validateZip($value)'}" ng-blur="Validator.validateField(basicForm['vendor.businessAddress.zip'], basicForm)" ng-change="Validator.removeInvalidation(basicForm['vendor.businessAddress.zip'], basicForm)">
+
+                <div ng-show="basicForm.FacultyErrors['vendor.businessAddress.zip']" class="alert alert-error alert-tooltip">{{basicForm.FacultyErrors['vendor.businessAddress.zip']}}</div>
+
+            </div>
+            
+            <div class="span5" style="float:none;">  
+                <h3>Primary Contact</h3>
+                <label>Name</label>
+                <input name="vendor.contactPerson.name" type="text" placeholder="Name" ng-model="vendor.contactPerson.name">
+                
+                <label>Email</label>
+                <input name="vendor.contactPerson.email" type="email" placeholder="Email" 
+				ui-validate="{email: 'Validator.validateEmail($value)'}"
+				ng-model="vendor.contactPerson.email" ng-blur="Validator.validateField(basicForm['vendor.contactPerson.email'], basicForm)" ng-change="Validator.removeInvalidation(basicForm['vendor.contactPerson.email'], basicForm)">
+
+                <div ng-show="basicForm.FacultyErrors['vendor.contactPerson.email']" class="alert alert-error alert-tooltip">{{basicForm.FacultyErrors['vendor.contactPerson.email']}}</div>
+                
+                <label>Phone</label>
+                <input name="vendor.contactPerson.phone" type="text" placeholder="Phone" 
+				number-only
+                ui-validate="{phone: 'Validator.validatePhone($value)'}"
+				ng-blur="Validator.validateField(basicForm['vendor.contactPerson.phone'], basicForm)" 
+				ng-change="Validator.removeInvalidation(basicForm['vendor.contactPerson.phone'], basicForm)"
+				ng-model="vendor.contactPerson.phone">
+
+                 <div ng-show="basicForm.FacultyErrors['vendor.contactPerson.phone']" class="alert alert-error alert-tooltip">{{basicForm.FacultyErrors['vendor.contactPerson.phone']}}</div>
+            </div>
+            
+            <div class="span10">
+                <button can-do-action="delete-vendors" can-do-action='delete-anything' delete-this id="vendor._id" redirect="/dashboard/vendors" type="Vendor" model="modelObject"></button>
+            </div>
+        </form>
+        
+        <form name="MarlinRepForm" class="row" ng-show="isActiveTab(1)" can-do-action="changeSalesRep-vendors" unsaved-warning-form>
+            <div class="span10">
+                <h3>Marlin Sales Rep</h3>
+            
+                <div ng-show="vendor.salesRep">
+                    <img class="img-large img-circle pull-left" ng-src="{{vendor.salesRep.avatar.original}}" ng-show="vendor.salesRep.avatar.original" default-image="user"/>
+                    
+                    <span class="pull-left manage-sales-rep">
+                        <a user-profile="vendor.salesRep"></a><br />
+                        <a mail-to="{{vendor.salesRep.email}}"></a> <br/>
+                        <a call-to="{{vendor.salesRep.phone}}"></a>
+                        <a class="btn btn-link link-danger" id="removeSalesRep" ng-click="removeSalesRep()">Remove Sales Rep</a>
+                    </span>  
+                </div>
+            </div>
+            <div class="span4">
+                
+                <div ng-show="!vendor.salesRep">
+                    <p class="alert">This vendor has no Marlin Sales Reps</p>
+                    
+                    <label>Add sales rep by searching by name</label>
+                    <!-- <input type="text" class="input-large" placeholder="Sales Rep Name" ng-model="salesRepId" id="salesRepId" typeahead="rep._id as rep.fullname for rep in allReps | filter:$viewValue"/> -->
+                    <!-- <button class="btn" id="addSalesRep" ng-disabled="!salesRepId" ng-click="addSalesRep()">Add Sales Rep</button> -->
+                    <input name="vendorName" type="text" placeholder="Sales Rep Name" ng-model="vendorName" id="salesName" />
+
+                    
+                    <!-- <pre>{{allReps}}</pre> -->
+                    <ul class="unstyled salesReps">
+                        <li ng-repeat="item in allReps | filter: { role : 'salesRep', fullname: vendorName }">
+                            <p>
+                                <img class="img-circle img-tiny" ng-show="item.avatar.original" ng-src="{{item.avatar.original}}" default-image="user" />
+                                <a user-profile="item"></a>
+                                <button class="pull-right btn" ng-click="addSalesRep(item._id)">
+                                    <i class="icon-plus"></i>
+                                </button>
+                            </p>
+                        </li>
+                    </ul>
+                    
+                </div>
+            
+            </div>
+        </form>
+        
+        <form name="VendorSalesRepForm" class="row" ng-show="isActiveTab(2)" unsaved-warning-form> 
+            <div class="span10">
+                <h3>Vendor Sales Rep</h3>
+                <div ng-show="vendor.vendorRep">
+                    <img class="img-large img-circle pull-left" ng-src="{{vendor.vendorRep.avatar.original}}" ng-show="vendor.vendorRep.avatar.original" default-image="user"/>
+                    
+                    <span class="pull-left manage-sales-rep">
+                        <a user-profile="vendor.vendorRep"></a><br />
+                        <a mail-to="{{vendor.vendorRep.email}}"></a> <br/>
+                        <a call-to="{{vendor.vendorRep.phone}}"></a>
+                        <a class="btn btn-link link-danger" id="removeVendorRep" ng-click="removeVendorRep()">Remove Vendor Rep</a>
+                    </span>  
+                </div>
+            </div>
+        
+            <div class="span4">
+                <div ng-show="!vendor.vendorRep">
+                    <p class="alert">This vendor has no Vendor Reps</p>
+                    
+                    <label>Add vendor rep by searching by name</label>
+                        <!-- <input type="text" class="input-large" placeholder="Sales Rep Name" ng-model="salesRepId" id="salesRepId" typeahead="rep._id as rep.fullname for rep in allReps | filter:$viewValue"/> -->
+                        <!-- <button class="btn" id="addSalesRep" ng-disabled="!salesRepId" ng-click="addSalesRep()">Add Sales Rep</button> -->
+                    <input name="salesName" type="text" placeholder="Vendor Rep Name" ng-model="salesName" id="salesName" />
+                </div>
+                    
+                <!-- <pre>{{allReps}}</pre> -->
+                <ul class="unstyled vendorReps" ng-show="!vendor.vendorRep">
+                    <li ng-repeat="item in allReps | filter: { role : 'vendorRep', fullname : salesName }">
+                        <p>
+                            <img class="img-circle img-tiny" ng-show="item.avatar.original" default-image="user" ng-src="{{item.avatar.original}}" />
+                            <a user-profile="item"></a>
+                            <button class="pull-right btn" ng-click="addVendorRep(item._id)">
+                                <i class="icon-plus"></i>
+                            </button>
+                        </p>
+                    </li>
+                </ul>
+                    
+            </div>
+        </form>     
+            
+        <form name="rateForm" class="row" ng-show="isActiveTab(3)" unsaved-warning-form can-do-action="changeRateSheets-vendors">    
+
+            <div class="span10">
+                <h3>Manage Vendor Rate Sheets</h3>
+            </div>
+                
+            <div class="span10">
+                <table class="table table-rate-sheets">
+                    <thead>
+                        <th></th>
+                        <th>Rate Sheet</th>
+                        <th>Display Name</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in programs">
+                            <td>
+                                <button
+                                    ng-click="toggleActiveRateSheet(item); item.displayName = '';rateForm.$setDirty();"
+                                    class="btn"
+                                    ng-class="{'btn-success' : item.active}">
+                                    <i class="icon " ng-class="{'icon-check' : item.active, 'icon-check-empty' : !item.active}"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <p>{{item.name}}</p>
+                            </td>
+                            <td>    
+                                <input
+                                    name="item.displayName"
+                                    ng-disabled="!item.active"
+                                    type="text"
+                                    class="input-block"
+                                    value="{{item.displayName}}"
+                                    ng-model="item.displayName"
+                                    placeholder="{{item.name}}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        
+        <form class="row" ng-show="isActiveTab(4)" name="toolForm" unsaved-warning-form>    
+
+            <div class="span10">
+                <h3>Manage Vendor Tools</h3>
+            </div>
+                
+            <div class="span5">
+                <ul class="unstyled">
+                    <li ng-repeat="item in vendor.tools">
+                        <button ng-click="toggleActive(item); toolForm.$setDirty();" class="btn" ng-class="{'btn-success' : item.enabled}">
+                            <i class="icon " ng-class="{'icon-check' : item.enabled, 'icon-check-empty' : !item.enabled}"></i>
+                        </button> {{item.display}}
+                    </li>
+                </ul>
+            </div>
+        </form>
+
+        <form ng-show="isActiveTab(5)" name="apiForm" class="row"  unsaved-warning-form can-do-action="changeQuoterOptions-vendors">
+             <div class="span9 clearfix alert alert-error" ng-hide="vendor.apiKey">Warning: API Tool has not been saved for the user. Please return to the Tools tab and click save to generate an API Key.</div>
+            <div class="span10">
+                <h3>API</h3>
+                <p>This key will provides access to the Marlin Quoter API. <a href="/#/tools/api" target="_blank">Click here</a> to learn more.</p>
+                <h4>{{vendor.apiKey}}</h4>
+                      
+                <hr />
+            </div>
+        </form>
+
+        <form name="locationForm" ng-if="isActiveTab(7)" class="row" unsaved-warning-form can-do-action="changeLocationOptions-vendors">
+            <div class="span9 clearfix alert alert-error" ng-show=" locationForm.FacultyErrors && showGlobalErrorMsg( locationForm.FacultyErrors)">
+                Form not saved. Please address the errors below.
+            </div>
+            <div class="span4">
+                
+                <p class="alert alert-error" ng-show="message.map">{{message.map}}</p>
+                
+                <button ng-click="findMyLocation()" class="btn" >Update Location</button>
+                
+                <label>Address 1</label>
+                <input name="vendor.businessAddress.address1" type="text" placeholder="Address 1" ng-model="vendor.businessAddress.address1" required ng-blur="Validator.validateField( locationForm['vendor.businessAddress.address1'],  locationForm)" ng-change="Validator.removeInvalidation( locationForm['vendor.businessAddress.address1'],  locationForm)">
+
+                <div ng-show=" locationForm.FacultyErrors['vendor.businessAddress.address1']" class="alert alert-error alert-tooltip">
+                    {{ locationForm.FacultyErrors['vendor.businessAddress.address1']}}
+                </div>
+                
+                <label>Address 2</label>
+                <input name="vendor.businessAddress.address2" type="text" placeholder="Address 2" ng-model="vendor.businessAddress.address2">
+                
+                <label>City</label>
+                <input name="vendor.businessAddress.city" type="text" placeholder="City" ng-model="vendor.businessAddress.city">
+                
+                <label>State</label>
+                <select name="vendor.businessAddress.state" ng-model="vendor.businessAddress.state" ng-options="state.abbreviation as state.name for state in states"></select>
+                
+                <label>Zip</label>
+                <input name="vendor.businessAddress.zip" type="text" placeholder="Zip" ng-model="vendor.businessAddress.zip" ui-validate="{zip: 'Validator.validateZip($value)'}" ng-blur="Validator.validateField( locationForm['vendor.businessAddress.zip'],  locationForm)" ng-change="Validator.removeInvalidation( locationForm['vendor.businessAddress.zip'],  locationForm)">
+
+                <div ng-show=" locationForm.FacultyErrors['vendor.businessAddress.zip']" class="alert alert-error alert-tooltip">{{ locationForm.FacultyErrors['vendor.businessAddress.zip']}}</div>
+                    
+            </div>
+                    
+        <div class="span6" ng-if="mapActive">
+            
+
+    <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" dragging="map.dragging">
+	
+	
+		
+		
+		
+		<ui-gmap-markers models="vendorMarker" coords="'self'" icon="'icon'">
+		
+		 <ui-gmap-windows show="'showWindow'" closeclick="closeClick()">
+                <div ng-non-bindable>
+								<p>{{name}}</p>
+                                <p ng-show="website != ''"><a target="_blank" ng-href="{{website}}">Visit Website</a></p>
+                                <p>{{businessPhone}}</p>
+                                <p>{{businessAddress.address1}}<br/>
+                                <p>{{businessAddress.address2}}</p>
+                                <p>{{businessAddress.city}}, {{businessAddress.state}} {{businessAddress.zip}}</p>
+                                <p><a target="_blank" ng-href="{{destAddress}}">Open in Google Maps</a></p>
+				
+				
+				</div>
+            </ui-gmap-windows>
+		
+		
+		
+        </ui-gmap-markers>
+		
+		
+	
+	
+	
+	</ui-gmap-google-map>
+<!--</div>-->
+				
+				
+				
+				
+            
+            </div>
+            <div class="span10">                        
+                <label>Tags</label>
+                <input name="vendor.vendorTags" type="text" ui-select3="vendorTagsOptions" ng-model="vendor.vendorTags">
+            </div>
+                
+            
+            <div class="span10">                        
+                <label>Industry Tags</label>
+                <input type="text" ui-select3="vendorIndustryTagsOptions" ng-model="vendor.vendorIndustryTags">
+            </div>    
+        </form>
+        
+        <form name="customizeForm" class="row" ng-show="isActiveTab(6)"  unsaved-warning-form can-do-action="changeQuoterOptions-vendors">
+            <div class="span9 clearfix alert alert-error" ng-show="customizeForm.FacultyErrors && showGlobalErrorMsg(customizeForm.FacultyErrors)">Form not saved. Please address the errors below.</div>
+            <div class="span10">
+                <h3>Custom Terms</h3>
+                
+                <label>Terms which display on application</label>
+                <textarea class='legalTerms' ng-model="vendor.legalTerms"></textarea>
+                
+                <h3>Custom Field</h3>
+                <p>The following allows you to add a custom field to this vendors quoter tool</p>
+                <label class="checkbox">Custom Field Enabled?
+                <input type="checkbox" ng-model="vendor.customField.enabled"></label>
+                
+                <div ng-show="vendor.customField.enabled">
+                    <label class="checkbox">Required?
+                    <input type="checkbox" ng-model="vendor.customField.required"></label> 
+                    
+                    <label>Display Name</label>
+                    <input type="text" 
+					class="input-x-large" 
+					name="vendor.customField.displayName"
+					ng-model="vendor.customField.displayName" 
+					ng-required = "true"
+					>
+					<div ng-if="vendor.customField.enabled && (vendor.customField.displayName == null)" class="alert alert-error alert-tooltip required">
+                        This field is required.</div> 
+				
+				
+                </div>
+                
+                <hr />
+                
+            </div>
+        
+            <div class="span10">
+                
+                <h3>Custom Credit Email Address</h3>
+                <p>The following field allows you to override the default email address applications get sent to upon completion</p>
+                <input type="email" 
+				ng-model="vendor.creditEmailAddress" 
+				name="vendor.creditEmailAddress" 
+				ng-blur="Validator.validateField(customizeForm['vendor.creditEmailAddress'], customizeForm)"
+				ng-change="Validator.removeInvalidation(customizeForm['vendor.creditEmailAddress'], customizeForm)"
+				ui-validate="{email: 'Validator.validateEmail($value)'}"
+				>
+
+                <div ng-show="customizeForm.FacultyErrors['vendor.creditEmailAddress']" class="alert alert-error alert-tooltip">
+                    {{customizeForm.FacultyErrors['vendor.creditEmailAddress']}}
+                </div>
+                
+                <hr />
+            </div>
+            
+            <div class="span10">
+                
+                <h3>Private Label Vendor</h3>
+                <label>
+                    <input type="checkbox" ng-model="vendor.whiteLabel">
+                    Private Label Vendor
+                </label>
+                
+            </div>
+        </form><!-- row -->
+        
+    </div><!-- span10 -->
+        
+</div>

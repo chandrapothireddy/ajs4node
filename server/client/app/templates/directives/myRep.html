@@ -1,0 +1,12 @@
+<div class="rep-tray" ng-show="salesRep._id">
+    <div class="span10">
+        <img class="img-circle img-medium pull-left section-image" ng-src="{{salesRep.avatar.original}}" default-image="user" />
+        <span class="section-contact pull-left">
+            <label>Your Marlin Sales Rep</label>
+            <p>{{salesRep.fullname}}</p>
+            <a mail-to="{{salesRep.email}}"></a><br/>
+            <a call-to="{{salesRep.phoneNumber}}"></a>
+        </span>
+    </div>
+</div>
+

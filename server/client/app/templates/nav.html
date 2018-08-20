@@ -1,0 +1,45 @@
+<a class="brand" href="#/dashboard">
+    <img src="img/logo.png" alt="MarlinQuoter" />
+</a>
+
+<!--
+<div ng-show="apiTracker.active()" style="background: pink;">
+  Loading some pizza data for ya, sir! ...
+</div>
+-->
+
+<ul class="user-tray text-center">
+  <li user-tray></li>
+</ul>
+
+<ul class="nav text-center">
+    <li class="dark" ng-class="getClass('/dashboard')">
+        <a href="#/dashboard"><i class="icon icon-home"></i><br/>Dashboard</a>
+    </li>
+    <li class="light vendors" ng-class="getClass('/dashboard/vendors')" can-do-action="list-vendors">
+        <a href="#/dashboard/vendors"><i class="icon icon-briefcase"></i><br/><span>Vendors</span></a>
+    </li>
+    
+    <li class="light" ng-class="getClass('/dashboard/programs')" can-do-action="list-programs">
+        <a href="#/dashboard/programs"><i class="icon icon-bar-chart"></i><br/>Rate Sheets</a>
+    </li>
+    
+    <li class="dark" ng-class="getClass('/dashboard/quotes')" >
+        <a href="#/dashboard/quotes"><i class="icon icon-comments-alt"></i><br/>Quotes</a>
+    </li>
+    
+    <li class="dark" ng-class="getClass('/dashboard/applications')">
+        <a href="#/dashboard/applications"><i class="icon icon-file-text-alt"></i><br/>Applications</a>
+    </li>
+    
+    <li class="light" ng-class="getClass('/dashboard/users')" can-do-action="list-users">
+        <a href="#/dashboard/users"><i class="icon icon-user"></i><br/>Users</a>
+    </li>
+    
+</ul>
+
+
+
+<p class="legal"><small>&copy; 2017 Marlin Business Services Corp &reg;<br/> <!-- R2 #3 change, Feb 2017. -->
+<a href="#/changelog">v.{{ version }}</a></small></p>
+

@@ -1,0 +1,193 @@
+<div class="row dealerLocator">
+     
+    <div class="pull-right poweredBy">
+        <img class="img-medium" src="img/powered_by.png" alt="Powered By Marlin" />
+    </div>
+     
+     <!-- Inital Industry Tab -->
+     
+     <div class="span12" ng-show="activeTab == 1">
+         
+        <div class="text-center">
+            <img src="img/locator/marlin_locator_logo.png" alt="Marlin Dealer Locator" class="dealerLocatorLogo" />
+        </div>
+         
+        <div>
+            <img src="img/locator/map.png" class="placeholderMap" alt="Map Placeholder" />
+        </div>
+        
+        <div class="row">
+        
+            <div class="span6 industryCount" ng-repeat="industry in industries" ng-click="setIndustry(industry._id)">
+             
+                <div class="border">
+             
+                    <div class="counts img-circle pull-left">
+                        {{industry.value}}
+                    </div>
+                    
+                    <div class="pull-left">
+                        <h2>{{industry._id}}</h2>
+                    </div>
+                    
+                    <p class="pull-right"><i class="icon-arrow-right"></i></p>
+                
+                </div>
+             
+            </div>
+        
+        </div>
+         
+     </div>
+     
+     
+     <!-- Secondary Tab to Show after Industry Selection -->
+     
+     <div class="span12" ng-show="activeTab == 2">
+     
+       <!--  <div class="row">
+            <div class="span12">
+                <div class="pull-left">
+                    <img src="img/locator/dealer_locator_logo.png" alt="Dealer Locator Icon" />
+                </div>
+            </div>
+        </div> -->
+     
+        <div class="row">
+            <div class="span12">
+                <button class="btn btn-primary backButton" ng-click="setIndustry()"><i class="icon-arrow-left"></i> Industry</button>
+            </div>
+        </div>
+        
+        <div class="row">
+        
+            <div class="span6">
+                <h2>{{currentIndustry}}</h2>
+            </div>
+            
+            <div class="span6">
+                <div class="counts pull-right img-circle">{{vendors.length}}</div>
+            </div>
+            
+        </div>
+        
+        <div class="row" ng-if="mapActive">
+        
+            <div class="span12">
+                
+                <div class="google-map"
+            		center="map.center"
+            		zoom="map.zoom"
+            		draggable="true"
+            		dragging="map.dragging"
+            		events="map.events">
+            		
+            		<markers models="markers" coords="'self'" icon="'icon'" click="'openClick'">
+        				<windows show="'showWindow'" closeClick="'closeClick'">
+        					<div ng-non-bindable>
+        					    <!-- <img ng-src="{{logo}}" class="img-medium"/> -->
+                        		<p>{{name}}</p>
+                        		<p ng-show="website != ''"><a target="_blank" ng-href="{{website}}">Visit Website</a></p>
+                                <p>{{businessPhone}}</p>
+                                <p>{{businessAddress.address1}}<br/>
+                                <p>{{businessAddress.address2}}</p>
+                                <p>{{businessAddress.city}}, {{businessAddress.state}} {{businessAddress.zip}}</p>
+                        		<p ng-show="distance && hasLocation">{{distance| number:0}} miles away</p>
+                        		<p><a target="_blank" ng-href="{{destAddress}}">Open in Google Maps</a></p>
+        					</div>
+        				</windows>
+        			</markers>
+        
+        		</div>
+                  
+        	</div>
+        	
+        </div>
+     
+        <div class="row">
+     
+            <div class="span12 area-locator-search">
+            
+                <div class="pull-left">
+                    <button class="btn btn-primary btn-large" style="margin-top:24px;" ng-click="findMe()"><i class="icon-screenshot icon"></i></button>
+                </div>
+                
+                <div class="pull-left">
+                    <label>City / State</label>
+                    <input type="text" required="required" ng-model="locationSearch">
+                    <button class="btn btn-primary btn-large" ng-disabled="!locationSearch" ng-click="findMyLocation()"><i class="icon-search icon"></i></button>
+                </div>
+                
+                <div class="pull-left">
+                    <label>Add Tags To Narrow Your Search</label>
+                    <input type="text" ng-model="searchText">
+                    <button class="btn btn-success btn-large" ng-click="searchByText()"><i class="icon-plus-sign icon"></i></button>
+                    <!-- <button class="btn btn-large" ng-show="searchText" ng-click="clearText()">Clear</button> -->
+                </div>
+                
+                <div class="pull-left">
+                    <label>Distance from location (in miles)</label>
+                    <div class="btn-group">
+                        <button ng-repeat="item in distanceOptions" class="btn" ng-click="setDistanceFrom(item)" ng-class="{active: distanceFrom == item}">{{item}}</button>
+                    </div>
+                </div>
+            
+            </div>
+         
+         </div>
+    
+         <div class="row">
+    
+            <div class="span12">
+            
+                <div ng-show="markers.length">
+                    <table id="markerList" class="table table-striped vendorResults">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Contact Info</th>
+                                <th></th>
+                                <th>Distance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in markers | orderBy:'distance'" ng-click="remoteOpenWindow(item)">
+                                <td>
+                                    <img ng-src="{{item.logo}}" />
+                                    <!-- <pre>{{item | json}}</pre> -->
+                                </td>
+                                <td>
+                                    <strong>{{item.name}}</strong><br/>
+                                    <span ng-if="item.businessAddress.address1">{{item.businessAddress.address1}}<br/></span>
+                                    <span ng-if="item.businessAddress.address2">{{item.businessAddress.address2}}<br/></span>
+                                    <span ng-if="item.businessAddress.city">{{item.businessAddress.city}}</span><span ng-if="item.businessAddress.state">, {{item.businessAddress.state}}</span><br/>
+                                    <span ng-if="item.businessAddress.zip">{{item.businessAddress.zip}}</span>
+                                </td>
+                                <td>
+                                    <p ng-show="item.email"><a mail-to="{{item.email}}"></a></p>
+                                    <p ng-show="item.phone"><a call-to="{{item.phone}}"></a></p>
+                                </td>
+                                <td>
+                                    <p ng-show="item.distance && hasLocation" class="milesAway">
+                                        <span>{{item.distance | number:0}}</span><br/>miles away
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div ng-show="!markers.length">
+                    <h3>No Results</h3>
+                    <p class="alert">No Marlin Dealers were founds in your area!</p>
+                </div>
+                
+            </div>
+    	
+    	</div>
+    	
+    	<div show="showWindow"></div>
+     
+     </div>
+     
+</div>

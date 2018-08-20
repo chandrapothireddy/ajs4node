@@ -1,0 +1,231 @@
+<div class="row has-title-bar" unsaved-warning-group>
+    <div class="span2 sidebar" ng-include="'app/templates/nav.html'"></div>
+     
+    <form name="basicForm" class="span10 offset2" unsaved-warning-form>
+        <div class="row title-bar">
+            <div class="span10">
+                <h2><i class="icon icon-bar-chart"></i> {{program.name || 'New Rate Sheet'}}</h2>
+               <!--
+ <ul class="nav nav-tabs">
+                  <li ng-repeat="tab in tabs" ng-class="{active: isActiveTab($index), disabled: !user._id && $index != 0}"><a ng-click="changeTab($index)">{{tab}}</a></li>
+                </ul>
+-->
+                <!-- ng-disabled="formBuyoutOptions.$invalid" -->
+                <div class="actions">
+                     <a class="btn btn-primary" id="cancel" history-back><i class="icon icon-remove-sign"></i>Close</a>
+                     <a class="btn btn-success" unsaved-warning-clear id="save" ng-show="basicForm.$dirty || formBuyoutOptions.$dirty"  ng-click="save()"><i class="icon icon-ok-sign"></i>Save</a>
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="span9 clearfix alert alert-error" ng-show="basicForm.$invalid && showGlobalErrorMsg(basicForm.FacultyErrors)">Please address the errors below.</div>
+
+            <div class="span9 clearfix alert alert-error" ng-show="formBuyoutOptions.$invalid && saveAlert">Form not saved. Please ensure all fields are filled out below.</div>
+
+            <div class="span3">
+                
+                <h3>Name</h3>
+                
+                <label>Program Name</label>
+                <input 
+                    name="program.name" 
+					type="text" 
+                    placeholder="" 
+                    ng-model="program.name" 
+                    required 
+					capitalize-first
+                    ng-blur="Validator.validateField(basicForm['program.name'], basicForm)"
+                    ng-change="Validator.removeInvalidation(basicForm['program.name'], basicForm)">
+
+                <div ng-show="basicForm.FacultyErrors['program.name']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['program.name']}}
+                </div>
+                
+            </div>
+            
+            <div class="span3" can-do-action="viewPrivateNotes">
+                
+                <h3>Private Notes</h3>
+                
+                <label>Private Notes</label>
+                <textarea 
+                    name="program.privateNotes" 
+                    type="text" 
+                    ng-model="program.privateNotes" 
+                    ng-blur="Validator.validateField(basicForm['program.privateNotes'], basicForm)"
+                    ng-change="Validator.removeInvalidation(basicForm['program.privateNotes'], basicForm)"></textarea>
+                <div ng-show="basicForm.FacultyErrors['program.privateNotes']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['program.privateNotes']}}
+                </div>
+            
+            </div>
+            
+            <div class="span3">  
+                
+                <h3>Public Notes</h3>
+                
+                <label>Public Notes</label>
+                <textarea name="program.publicNotes" type="text" ng-model="program.publicNotes" ng-blur="Validator.validateField(basicForm['program.publicNotes'], basicForm)" ></textarea>
+
+
+                <div ng-show="basicForm.FacultyErrors['program.publicNotes']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['program.publicNotes']}}
+                </div>
+                
+            </div>
+        </div>
+    
+        <div class="row">
+         
+            <div class="span10">
+            
+                <h3>Details</h3>
+            
+                <span class="pull-left">
+                    <label>Term Length</label>
+                    <select ng-options="option for option in termPeriodOptions" type="text" class="input-small" ng-model="program.rateSheet.termPeriod" name="program.rateSheet.termPeriod" ng-change="Validator.validateField(basicForm['program.rateSheet.termPeriod'], basicForm)"></select>
+
+                    <div ng-show="basicForm.FacultyErrors['program.rateSheet.termPeriod']" class="alert alert-error alert-tooltip">
+                        {{basicForm.FacultyErrors['program.rateSheet.termPeriod']}}
+                    </div>
+                </span>
+                <!-- PUT BACK IN WHEN DEFERRED PAYMENTS ARE FINISHED -->
+                <!-- <span class="pull-left">&nbsp;&nbsp;&nbsp;</span>
+                <span class="pull-left">
+                    <label>Deferred Payments</label>
+                    <input type="text" class="input-medium disabled" disabled/>
+                </span> -->
+            </div>
+            
+        </div>
+    </form>
+    <div class="span10 offset2">   
+        <div class="row">
+        
+            <div class="span10">
+                
+                <h3>Buyout Options</h3>
+                
+                <!--
+  
+                <label>Cost Range Min</label>   
+                <input type="text" class="input-small" ng-model="program.rateSheet.range.min"/>
+                
+                <label>Cost Range Max</label> 
+                <input type="text" class="input-small" ng-model="program.rateSheet.range.max"/>
+-->
+                <form class="buyoutEditForm" name="formBuyoutOptions" novalidate unsaved-warning-form>
+                
+                    <div ng-repeat="buyoutOptions in program.rateSheet.buyoutOptions">
+                        <ng-form name="optionForm">
+                            
+                            <label>Buyout Name</label>
+                            <input style="width: 50%;" type="text" required ng-model="buyoutOptions.name" name="buyoutOptions.name" ng-blur="Validator.validateField(optionForm['buyoutOptions.name'], optionForm)" 
+                            ng-change="Validator.removeInvalidation(optionForm['buyoutOptions.name'], optionForm)">
+
+                            <div ng-show="optionForm.$invalid && optionForm.$dirty" class="alert alert-error alert-tooltip" style="width: 50%;">
+                                Program name can't be blank.
+                            </div>
+                        </ng-form>
+                        
+                        <a class="btn pull-right" ng-click="removeOption(buyoutOptions)"><icon class="icon icon-trash"></icon></a>
+                        
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th colspan="10">&nbsp;</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="cost-range"></td>
+                                    <td colspan="{{buyoutOptions.terms.length}}">
+                                        <span>Available Terms</span><br />
+                                        <a class="btn" ng-click="addColumnToOption(buyoutOptions)">Add Term</a>
+                                    </td>
+                                    <td colspan="{{8 - buyoutOptions.terms.length}}" class="td-pad">&nbsp;</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td colspan="2" class="cost-range"></td>
+                                    <td colspan="1" ng-repeat="item in buyoutOptions.terms" class="">
+                                        <input required integer-only type="text" class="span1" ng-model="item.value" name="item.value" /> 
+                                    </td>
+                                    <td colspan="{{8 - buyoutOptions.terms.length}}" class="td-pad">&nbsp;</td>
+                                </tr> 
+                                <tr>
+                                    <td colspan="2" class="cost-range">Total Cost Range</td>
+                                    <td colspan="1" ng-repeat="item in buyoutOptions.terms" class="">
+                                        <a class="btn" ng-click="remove('column', $index, buyoutOptions)"><icon class="icon icon-minus-sign"></icon></a>
+                                    </td>
+                                    <td colspan="{{8 - buyoutOptions.terms.length}}" class="td-pad">&nbsp;</td>
+                                </tr> 
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key, cost) in buyoutOptions.costs">
+                                    <td colspan="2" class="cost-range">
+                                        <a class="btn" ng-click="remove('row', $index, buyoutOptions)"><icon class="icon icon-minus-sign"></icon></a>
+                                        <input 
+                                            required 
+                                            number-only 
+                                            min-value="{{getValue(buyoutOptions, $index-1, 'max')}}"
+                                            max-value="{{getValue(buyoutOptions, $index+1, 'min')}}"
+                                            type="text" 
+                                            class="span1" 
+                                            ng-disabled="key != 0"
+                                            ng-model="cost.min" name="cost.min" /> 
+                                        <input 
+                                            number-only 
+                                            required 
+                                            type="text" 
+                                            min-value="{{getValue(buyoutOptions, $index, 'min')}}"
+                                            max-value="{{getValue(buyoutOptions, $index+1, 'min')}}"
+                                            class="span1" 
+                                            ng-model="cost.max" 
+                                            ng-change="adjustValues(buyoutOptions, cost.max, $index)" name="cost.max" />
+                                    </td>
+                                    <td colspan="1" ng-repeat="(subKey, rate) in cost.rates" class="">
+                                        <input 
+                                            class="span1" 
+                                            type="text"
+                                            number-only 
+                                            required 
+                                            name="cost.rates"
+                                            ng-model="rate.value"/>  
+                                    </td>
+                                    <td colspan="{{8 - buyoutOptions.terms.length}}" class="td-pad">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 200px;">
+                                        <a class="btn" ng-click="addRowToOption(buyoutOptions)">Add Cost Range</a> 
+                                    </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                        <div ng-show="formBuyoutOptions.FacultyErrors['buyoutOptions.terms']" class="alert alert-error alert-tooltip">
+                            {{formBuyoutOptions.FacultyErrors['buyoutOptions.terms']}}
+                        </div>
+                    </div>
+                
+                </form>
+                
+                <form class="newOption" name="newOptionForm" novalidate>
+                    
+                    <hr />
+                    
+                    <label>Buyout Name</label>
+                    <input name="newOption.name" style="width: 50%;" type="text" class="input-large" required ng-model="newOption.name">
+                
+                    <button class="btn btn-large" ng-click="makeNewOption()" ng-show="newOptionForm.$valid && newOption.name"><i class="icon-plus"></i></button> 
+                    
+                </form>
+         
+                <button delete-this can-do-action="delete-anything" id="program._id" redirect="/dashboard/programs" ng-show="program._id" type="Program" model="modelObject"></button>
+         
+            </div>
+
+        </div>
+    </div>
+</div>

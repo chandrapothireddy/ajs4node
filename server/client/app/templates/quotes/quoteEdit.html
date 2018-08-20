@@ -1,0 +1,249 @@
+<div class="row has-title-bar has-no-tabs" unsaved-warning-group>
+    
+    <div class="span2 sidebar" ng-include="'app/templates/nav.html'"></div>
+    
+        <div class="span10 offset2">
+            <div class="row title-bar">
+                <div class="span10">
+                    <h2><i class="icon icon-comments-alt"></i>{{!quote._id && 'New' || 'Edit'}} Quote</h2>
+                   <!--
+                    <ul class="nav nav-tabs">
+                      <li ng-repeat="tab in tabs" ng-class="{active: isActiveTab($index), disabled: !quote._id && $index != 0}"><a ng-click="changeTab($index)">{{tab}}</a></li>
+                    </ul>
+                    -->
+                    
+                    <div class="actions">
+					
+                      <!--  <a class="btn btn-primary" target="_blank" ng-href="{{linkToToolPrint(quote.vendorId.slug, 'quoter', quote._id)}}"><i class="icon icon-print"></i>Download PDF</a>-->
+					  <a class="btn btn-primary" target="_blank" ng-click="download(quote._id)"><i class="icon icon-print"></i>Download PDF</a>
+                        <a class="btn btn-primary" target="_blank" ng-href="{{linkToTool(quote.vendorId.slug, 'quoter', quote._id)}}"><i class="icon icon-paste"></i>View Quote</a>
+                        <a class="btn btn-primary" id="cancel" history-back><i class="icon icon-remove-sign"></i>Close</a>
+                        <a class="btn btn-success" unsaved-warning-clear id="save" ng-show="quoteForm.$dirty" ng-click="save(false)"><i class="icon icon-ok-sign"></i>Save</a>
+                    </div>
+                
+                </div>
+            </div>
+        <form name="quoteForm" class="row" unsaved-warning-form>
+            <div class="span9 clearfix alert alert-error" ng-show="quoteForm.FacultyErrors && showGlobalErrorMsg(quoteForm.FacultyErrors)">Form not saved. Please address the errors below.</div>
+            <div class="span9 clearfix alert alert-error" ng-show="serverError">{{serverError}}</div>    
+            <div class="span4">
+                <legend>Equipment Cost Information</legend>
+                <label>Total Cost</label>
+                <input
+                    name="quote.totalCost" 
+                    type="text" 
+                    placeholder="0.00" 
+                    currency-input
+                    currency-input-watch="{{quote.totalCost}}"
+                    ng-model="quote.totalCost"
+                    ng-blur="Validator.validateField(quoteForm['quote.totalCost'], quoteForm)"
+                    number-only
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.totalCost'], quoteForm)"
+                    required>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.totalCost']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.totalCost']}}
+                </div>
+                
+                <label>Description of Equipment</label>
+                <textarea 
+                    name="quote.description" 
+                    type="text" 
+                    ng-model="quote.description"
+                    ng-blur="Validator.validateField(quoteForm['quote.description'], quoteForm)"
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.description'], quoteForm)"
+                    required></textarea>
+
+                <div ng-if="quote.vendorId.customField.enabled && quote.vendorId.customField.required">        
+                    <label for="customFieldRequired">{{quote.customField.displayName || quote.vendorId.customField.displayName}}</label>
+                    <input 
+                        
+                        required
+                        name="customFieldRequired" 
+                        type="text" class="large" 
+                        ng-blur="Validator.validateField(quoteForm.customFieldRequired, quoteForm)"
+                        ng-model="quote.customField.value" />
+                    
+                    <div ng-show="quoteForm.FacultyErrors.customFieldRequired" class="alert alert-error alert-tooltip">
+                        {{quoteForm.FacultyErrors.customFieldRequired}}
+                    </div>
+                </div>
+                
+                <div ng-if="quote.vendorId.customField.enabled && !quote.vendorId.customField.required">  
+                    <label for="customField">{{quote.customField.displayName || quote.vendorId.customField.displayName}}</label>
+                    <input 
+                        
+                        name="customField" 
+                        type="text" class="large" 
+                        ng-blur="Validator.validateField(quoteForm.customField, quoteForm)"
+                        ng-model="quote.customField.value" />
+                
+                    <div ng-show="quoteForm.FacultyErrors.customField" class="alert alert-error alert-tooltip">
+                        {{quoteForm.FacultyErrors.customField}}
+                    </div>
+                </div>
+
+                
+                <label>Status</label>
+                <div class="btn-group">
+                    <button ng-click="quote.status='Open';quoteForm.$setDirty();" class="btn" ng-class="{active: quote.status=='Open'}">Open</button>
+                    <button ng-click="quote.status='Archived';quoteForm.$setDirty();" class="btn" ng-class="{active: quote.status=='Archived'}">Archived</button>
+                </div>
+                
+            </div>
+            
+            
+            <div class="span3">
+                <legend>Company Information</legend>
+                
+                <label>Full Legal Business Name</label>
+                <input 
+                    name="quote.company.fullLegalBusinessName" 
+                    type="text" 
+                    placeholder="" 
+                    ng-model="quote.company.fullLegalBusinessName"
+                    ng-blur="Validator.validateField(quoteForm['quote.company.fullLegalBusinessName'], quoteForm)"
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.company.fullLegalBusinessName'], quoteForm)"
+                    required>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.company.fullLegalBusinessName']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.company.fullLegalBusinessName']}}
+                </div>
+                
+                <label>Address 1</label>
+                <input 
+                    name="quote.company.businessAddress.address1" 
+                    type="text" 
+                    placeholder="" 
+                    ng-model="quote.company.businessAddress.address1"
+                    ng-blur="Validator.validateField(quoteForm['quote.company.businessAddress.address1'], quoteForm)"
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.company.businessAddress.address1'], quoteForm)"
+                    required>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.company.businessAddress.address1']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.company.businessAddress.address1']}}
+                </div>
+                
+                <label>Address 2</label>
+                <input 
+                    name="quote.company.businessAddress.address2" 
+                    type="text" 
+                    placeholder="" 
+                    ng-model="quote.company.businessAddress.address2">
+                
+                <label>City</label>
+                <input 
+                    name="quote.company.businessAddress.city" 
+                    type="text" placeholder="" 
+                    ng-model="quote.company.businessAddress.city"
+                    ng-blur="Validator.validateField(quoteForm['quote.company.businessAddress.city'], quoteForm)"
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.company.businessAddress.city'], quoteForm)"
+                    required>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.company.businessAddress.city']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.company.businessAddress.city']}}
+                </div>
+                
+                <label>State</label>
+                <select 
+                    name="quote.company.businessAddress.state" 
+                    class="medium" 
+                    ng-model="quote.company.businessAddress.state" 
+                    ng-options="state.abbreviation as state.name for state in states"
+                    ng-blur="Validator.validateField(quoteForm['quote.company.businessAddress.state'], quoteForm)"
+                    ng-change="Validator.validateField(quoteForm['quote.company.businessAddress.state'], quoteForm)"
+                    required>
+                </select>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.company.businessAddress.state']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.company.businessAddress.state']}}
+                </div>
+<!--
+                <select class="medium" ng-model="quote.company.state">
+                    <option ng-repeat="item in states" value="{{item.abbreviation}}">{{item.name}}</option>
+                </select>
+-->
+
+                <label>Zip</label>
+                <input 
+                    name="quote.company.businessAddress.zip" 
+                    type="text" 
+                    placeholder="" 
+					number-only
+                    ng-model="quote.company.businessAddress.zip"
+                    ng-blur="Validator.validateField(quoteForm['quote.company.businessAddress.zip'], quoteForm)"
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.company.businessAddress.zip'], quoteForm)"
+                    ui-validate="{zip: 'Validator.validateZip($value)'}"
+                    required>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.company.businessAddress.zip']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.company.businessAddress.zip']}}
+                </div>
+               
+                
+            </div>
+            
+            
+            <div class="span3">  
+               
+               <p class="quote-date pull-right">Generated on {{quote.created | date:longDate }}</p>
+
+                <legend>Contact Information</legend>
+            
+                <label>Contact Name</label>
+                <input 
+                    name="quote.company.contactPerson.name" 
+                    type="text" 
+                    placeholder="" 
+                    ng-model="quote.company.contactPerson.name"
+                    ng-blur="Validator.validateField(quoteForm['quote.company.contactPerson.name'], quoteForm)"
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.company.contactPerson.name'], quoteForm)"
+                    required>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.company.contactPerson.name']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.company.contactPerson.name']}}
+                </div>
+            
+                <label>Email</label>
+                <input 
+                    name="quote.company.contactPerson.email" 
+                    type="email" 
+                    placeholder="" 
+                    ng-model="quote.company.contactPerson.email"
+                    ng-blur="Validator.validateField(quoteForm['quote.company.contactPerson.email'], quoteForm)"
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.company.contactPerson.email'], quoteForm)"
+                    required>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.company.contactPerson.email']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.company.contactPerson.email']}}
+                </div>
+                
+                <label>Phone</label>
+                <input 
+                    name="quote.company.contactPerson.phone" 
+                    type="text" 
+                    placeholder="" 
+                    ng-model="quote.company.contactPerson.phone"
+                    ui-mask="(999) 999-9999"
+                    ui-validate="{phone: 'Validator.validatePhone($value)'}"
+                    ng-blur="Validator.validateField(quoteForm['quote.company.contactPerson.phone'], quoteForm)"
+                    ng-change="Validator.removeInvalidation(quoteForm['quote.company.contactPerson.phone'], quoteForm)"
+                    required>
+
+                <div ng-show="quoteForm.FacultyErrors['quote.company.contactPerson.phone']" class="alert alert-error alert-tooltip">
+                    {{quoteForm.FacultyErrors['quote.company.contactPerson.phone']}}
+                </div>
+            
+                <p>Preferred contact method<br/>
+                    <strong>{{quote.company.contactPerson.contactMethod | capitalize}}</strong>
+                </p>
+            
+            </div>
+            
+        </div>
+        
+        <button can-do-action="delete-quote" delete-this id="quote._id" redirect="/dashboard/quotes" type="Quote" model="modelObject"></button>
+        
+    </form>
+</div>
+

@@ -1,0 +1,68 @@
+<div class="row-fluid">
+    <div class="span4 offset4 center">
+        
+        <h1>MarlinQuoter</h1> 
+        <a ng-click="goTo('changelog')">v{{version}}</a>
+<!--
+        
+        <h5>Important Notes</h5>
+        <p class="alert alert-info">Refreshing this window will reset the quoter and all data!</p>
+        
+        <p class="alert alert-info">Use the links in the footer to navigate between front-end and back-end at any time.</p> 
+-->
+        
+        <h3>Choose a path</h3>
+     
+    </div>
+
+</div>
+
+<div class="row-fluid area-start center">    
+    
+    <div class="span2 offset3 start-button" ng-click="loginAs('admin')">
+        <div class="well">
+            <i class="icon icon-dashboard"></i>
+            <p>SuperAdmin Dashboard</p>
+        </div>
+    </div>
+    
+    <div class="span2 start-button" ng-click="loginAs('salesRep')">
+        <div class="well">
+            <i class="icon icon-user"></i>
+            <p>Sales Rep Dashboard</p>
+        </div>
+    </div>
+    
+    <div class="span2 start-button" ng-click="loginAs('vendorRep')">
+        <div class="well">
+            <i class="icon icon-briefcase"></i>
+            <p>Vendor Rep Dashboard</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="row-fluid area-start center"> 
+
+    <div class="span2 offset3 start-button" ng-click="goTo('tools/quoter')">
+        <div class="well">
+            <i class="icon icon-paste"></i> 
+            <p>End User Quote Tool</p>
+        </div>
+    </div>
+    
+    <div class="span2 start-button" ng-click="goTo('tools/locator')">
+        <div class="well">
+            <i class="icon icon-globe"></i> 
+            <p>End User Locator Tool</p>
+        </div>
+    </div>
+    
+    <div class="span2 start-button" ng-click="goTo('tools/api')">
+        <div class="well">
+            <i class="icon icon-bullseye"></i> 
+            <p>Vendor API<br/>&nbsp;</p>
+        </div>
+    </div>
+
+</div>

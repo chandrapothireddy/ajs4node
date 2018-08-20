@@ -1,0 +1,105 @@
+<div class="row has-title-bar has-no-tabs" ng-init="index()">
+    <div class="span2 sidebar" ng-include="'app/templates/nav.html'"></div>
+    <div class="span10 offset2">
+
+        <div class="row title-bar">
+            <div class="span10">
+                <h2><i class="icon icon-briefcase"></i> Vendors</h2>
+                <!-- R2 #6 change, May 2016. -->
+                <div class="actions">
+                    <a class="btn btn-primary" ng-show="downloadButton" target="_blank" ng-csv="getArray()" lazy-load="true" filename="vendors.csv"><i class="icon icon-download-alt"></i>Download</a>
+                    <a id="addVendor" class="btn btn-primary" href="#/dashboard/vendors/new"><i class="icon icon-plus-sign"></i>Add New Vendor</a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div>
+
+                <div class="form-inline" style="float:left">
+                    <label>Search</label><br />
+                        <input style="width:290px;" ng-keyup="listAllVendor()" type="text" ng-enter="searchFn()" placeholder="Search" ng-model="searchvendorTerm">
+						<img ng-click="searchFn()" ng-src="img/system-search.png" style="padding-top: 10px; padding-bottom: 10px;cursor:pointer" />
+						
+						
+						
+                    
+                </div>
+				<div style="float:right">
+				<label>Per page</label><select ng-change="index()" ng-model="perpagenum" ng-options="x for x in perpage">
+</select>
+				</div>
+				
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="span3">Vendor</th>
+                            <th>Contact Info</th>
+                            <th>Tools</th>
+                            <th class="text-center">Sales Rep</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-click="editItem(item._id)" ng-repeat="item in vendors">
+                            <td class="text-center border-right">
+                                <div class="img-wrapper">
+                                    <img class="img-mediumBigger" ng-src="{{item.logo.original}}" default-image="vendor" />
+                                </div>
+                                <div class="placeholder" ng-show="!item.logo.original" />
+                            </td>
+                            <td class="salesRep"><span class="company-name">{{item.name}}</span>
+                                <br/>
+                                <span class="contact-name">{{item.contactPerson.name}}</span>
+                                <br/>
+                                <a mail-to="{{item.contactPerson.email}}"></a>
+                                <br/>
+                                <a call-to="{{item.contactPerson.phone}}"></a>
+                            </td>
+                            <td class="tool-icons">
+                                <i ng-repeat="(key, tool) in item.tools" class="icon " ng-class="{ 
+                                        'icon-success' : tool.enabled, 
+                                        'icon-comments-alt' : key == 'quoter', 
+                                        'icon-map-marker' : key == 'locator',
+                                        'icon-bullseye' : key == 'api'}"></i>
+                            </td>
+                            <td ng-show="item.salesRep" class="text-center">
+                                <img class="img-circle img-tiny" ng-show="item.salesRep.avatar.original" default-image="user" ng-src="{{item.salesRep.avatar.original}}" />
+                                <br />
+                                <a user-profile="item.salesRep"></a>
+                                <i class="icon icon-reveal icon-pencil"></i>
+                            </td>
+                            <td ng-show="!item.salesRep" class="text-center">
+                                No sales rep
+                                <i class="icon icon-reveal icon-pencil"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+				<!-- pagination code starts-->
+                <div align="center" ng-if="1 < pageNums2Disp.length">
+                    <ul class="pagination">
+                        <li ng-class="{'disabled':firstDisabled()}"><a ng-click="first()">First |< </a>
+                        </li>
+                        <li ng-class="{'disabled':prevDisabled()}"><a ng-click="previous()">Previous << </a>
+                        </li>
+					  <li ng-repeat="i in pageNums2Disp" ng-class="{'disabled': currDisabled(i)}"><a ng-click="getPage(i)">{{i}}</a></li>
+					 
+                        <li ng-class="{'disabled': nextDisabled()}"><a ng-click="next()">Next >> </a>
+                        </li>
+                        <li ng-class="{'disabled':lastDisabled()}"><a ng-click="last()">Last >| </a>
+                        </li>
+                    </ul>
+                    <p align="center">Showing page {{currentPageNum}} of {{maxPageNum}}</p>
+                </div>
+				<div align="center" ng-if="pageNums2Disp.length < 1">
+				<p>No records were found</p>
+				
+				</div>
+                <!-- pagination code  ends-->
+            </div>
+        </div>
+
+    </div>
+</div>

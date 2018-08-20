@@ -1,0 +1,11 @@
+<img class="img-circle"  ng-src="{{currentUser().avatar.original}}" default-image="user"/>
+<img class="img-vendor" ng-show="currentUser().vendor.logo.original" ng-src="{{currentUser().vendor.logo.original}}" />
+<br/>
+<br/>
+<span ng-show="isLoggedIn()">{{currentUser().name.first}} {{currentUser().name.last}}</span>
+<br/>
+<a id="logout" ng-show="isLoggedIn()" ng-click="goToProfile()">My Profile</a>
+<br />
+<a id="vendor_logout" ng-show="currentUser().vendor._id" ng-click="goTo('dashboard/vendors/' + currentUser().vendor._id)">Vendor Profile</a>
+<br />
+<a id="logout" ng-show="isLoggedIn()" ng-click="logout()"><small>Log Out</small></a>

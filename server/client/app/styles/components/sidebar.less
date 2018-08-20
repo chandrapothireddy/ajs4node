@@ -1,0 +1,107 @@
+.sidebar {
+    
+    position: fixed;
+    left: -20px;
+    top: 0;
+    height: 100%;
+    background: @navbarBackground;
+    color: #fff;
+    text-align: center;
+    border-right: 3px solid #e6e6de;
+    z-index: @zindexFixedNavbar + 1;
+    
+    .brand {
+        margin: 20px auto 10px auto;
+        display: block;
+        
+        a, a:hover {
+            color: white;
+        }
+        
+    }
+    
+    ul.nav li.vendors{
+        a{
+            padding: 16px 0;
+
+        }
+        
+        i.icon-briefcase{
+            font-size: 23px;
+            margin-bottom: 3px;
+        }  
+        span{
+            position: relative;
+            top: 2px;
+        }
+    }
+
+    .legal {
+        line-height: 16px;
+        position: relative;
+        bottom: 0;
+        top: 10px;
+    }
+    
+    // note this is not correct for all widths
+    // but it demonstrates how we should be using less to do calculations
+    // rather than just setting width: 140px; etc. 
+    .user-tray {
+        background: @blue;
+        padding: 20px 0;
+    
+        img {
+            width: (@gridColumnWidth * 2) - 10;
+        }
+    }
+    
+    a {
+        color: #0c304e;
+        
+        &:hover {
+            color: white;
+        }
+    }
+    
+    ul {
+        
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+    
+        li {
+            list-style: none;  
+        }
+        
+        /* li.active a i{text-shadow: -1px 0px 17px rgba(255, 255, 255, 1);} */
+    
+        &.nav {
+            li {
+                width: 50%;
+                font-size: 10px;
+                text-transform: uppercase;
+                float: left;
+                height: 80px;
+                
+                i { 
+                    font-size: 26px;
+                }
+                
+                a {
+                    float: left;
+                    width: 100%;
+                    margin: 0;
+                    padding: 15px 0;
+                    
+                    &:hover {
+                        background-color: transparent;
+                    }
+                }
+                
+                &.dark{ background: #005194; }
+                &.light{ background: #01569d; }
+                &.active a {color: #fff; }
+            }
+        }
+    }   
+}

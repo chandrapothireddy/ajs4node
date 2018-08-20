@@ -1,0 +1,299 @@
+// ---------------------------------------------------------
+//
+// QUOTER Tool
+//
+// ---------------------------------------------------------
+
+.quoter, .application {
+    
+    h3 {
+        text-align: center;
+        
+        padding-bottom: 20px;
+        
+        &:after {
+            content: "";
+            border: 0;
+            border-top: 1px solid @hrBorder;
+            border-bottom: 1px solid @white;
+            display: block;
+        }
+        
+    }
+
+    .vendorSection {
+        text-align: left;
+    }
+    
+    label {
+        text-transform: uppercase;
+    }
+    
+    .dollarSign {
+        font-size: 25px;
+        margin-right: 10px;
+    }
+    
+    .area {
+        padding: 20px 0;        
+    }
+    
+    input :disabled,
+    textarea :disabled {
+        background: @white;
+        border-color: @white;
+    }
+
+    .area-equiptment textarea, 
+    .area-equiptment input {
+        width: (@gridColumnWidth * 5) + 40;
+    }
+    
+    .area-equiptment input.dollarSign-prepend {
+       width: (@gridColumnWidth * 5) + 20; 
+    }
+    
+    .area-equiptment textarea {
+        height: 100px;
+    }
+    
+    .btn-mega {
+        margin: 0 auto;
+    }
+    
+    .input-xxxlarge {
+        width: 630px;
+    }
+    
+    small {
+        font-size: 10px;
+    }
+    
+    .stretch {
+        background: #fff;
+    }
+    
+}
+
+.mobile { display: none;}
+.desktop {display: inherit;}
+
+
+//
+// Responsive: Landscape phone to desktop/tablet
+// --------------------------------------------------
+
+.application {
+
+  @media (max-width: 480px) {
+    th {
+      display: table-cell !important;
+    }
+  }
+
+}
+
+.quoter, .application {
+
+  @media (max-width: 480px) {
+
+    .mobile { display: inherit;}
+    .desktop {display: none;}
+
+    // Padding to set content in a bit
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    // Negative indent the now static "fixed" navbar
+    .navbar-fixed-top,
+    .navbar-fixed-bottom,
+    .navbar-static-top {
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+    // Remove padding on container given explicit padding set on body
+    .container-fluid {
+      padding: 0;
+    }
+
+    // TYPOGRAPHY
+    // ----------
+    // Reset horizontal dl
+    .dl-horizontal {
+      dt {
+        float: none;
+        clear: none;
+        width: auto;
+        text-align: left;
+      }
+      dd {
+        margin-left: 0;
+      }
+    }
+
+    // GRID & CONTAINERS
+    // -----------------
+    // Remove width from containers
+    .container {
+      width: auto;
+    }
+    // Fluid rows
+    .row-fluid {
+      width: 100%;
+    }
+    // Undo negative margin on rows and thumbnails
+    .row,
+    .thumbnails {
+      margin-left: 0;
+    }
+    .thumbnails > li {
+      float: none;
+      margin-left: 0; // Reset the default margin for all li elements when no .span* classes are present
+    }
+    // Make all grid-sized elements block level again
+    [class*="span"],
+    .uneditable-input[class*="span"], // Makes uneditable inputs full-width when using grid sizing
+    .row-fluid [class*="span"] {
+      float: none;
+      display: block;
+      width: 100%;
+      margin-left: 0;
+      .box-sizing(border-box);
+    }
+    .span12,
+    .row-fluid .span12 {
+      width: 100%;
+      .box-sizing(border-box);
+    }
+    .row-fluid [class*="offset"]:first-child {
+      margin-left: 0;
+    }
+
+    // FORM FIELDS
+    // -----------
+    // Make span* classes full width
+    // .input-large,
+    // .input-xlarge,
+    // .input-xxlarge,
+    // input[class*="span"],
+    // select[class*="span"],
+    // textarea[class*="span"],
+    // .uneditable-input {
+    //   .input-block-level();
+    // }
+    // But don't let it screw up prepend/append inputs
+    .input-prepend input,
+    .input-append input,
+    .input-prepend input[class*="span"],
+    .input-append input[class*="span"] {
+      display: inline-block; // redeclare so they don't wrap to new lines
+      width: auto;
+    }
+    .controls-row [class*="span"] + [class*="span"] {
+      margin-left: 0;
+    }
+
+    // Modals
+    .modal {
+      position: fixed;
+      top:   20px;
+      left:  20px;
+      right: 20px;
+      width: auto;
+      margin: 0;
+      &.fade  { top: -100px; }
+      &.fade.in { top: 20px; }
+    }    
+
+    // Smooth out the collapsing/expanding nav
+    .nav-collapse {
+      -webkit-transform: translate3d(0, 0, 0); // activate the GPU
+    }
+
+    // Block level the page header small tag for readability
+    .page-header h1 small {
+      display: block;
+      line-height: @baseLineHeight;
+    }
+
+    // Update checkboxes for iOS
+    input[type="checkbox"],
+    input[type="radio"] {
+      border: 1px solid #ccc;
+      width: 20px !important;
+    }
+
+    // mobile stuff
+    textarea, input {
+        width: 100% !important;
+        padding: 4%;
+        color: @gray !important;
+    }
+
+    input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
+        color: black !important;
+    }
+
+    .dollarSign {
+        margin-right: 0;
+    }
+
+    .area-equiptment textarea, 
+    .area-equiptment input {
+        width: 92% !important;
+    }
+
+    .area-equiptment #cost,
+    #permalink {
+      width: 90% !important;
+    }
+
+    .vendorSection {
+        text-align: center;
+    }
+
+    .mobile {
+        .btn {
+            width: 86%;
+        }
+
+        .padding {
+            padding: 24px 0 10px 0;
+            margin: 0;
+        }
+
+        h4 {
+            margin-top: 80px;
+        }
+    }
+
+    .optionArea {
+      padding-bottom: 20px;
+    }
+
+    .alert {
+      padding: 8px 14px 8px 14px;
+    }
+
+    .poweredby {
+      float: none;
+    }
+
+    .poweredbyWrapper {
+      width: 100%;
+      text-align: center;
+    }
+
+    .addressArea {
+      text-align: center;
+    }
+
+    .years-in-business {
+      margin-top: 20px;
+      input {
+        width: 80% !important;
+      }
+    }
+
+  }
+}

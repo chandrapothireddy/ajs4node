@@ -1,0 +1,243 @@
+<div class="row has-title-bar" unsaved-warning-group>
+    <div class="span2 sidebar" ng-include="'app/templates/nav.html'"></div>
+    <div class="span10 offset2">
+        <div class="row title-bar">
+            <div class="span10">
+                <h2 ng-show="!user.name.first && !user.name.last"><i class="icon icon-user"></i> New User</h2>
+                <h2 ng-show="user.name.first || user.name.last"><i class="icon icon-user"></i> {{user.name.first + ' ' + user.name.last}}</h2>
+                <ul class="nav nav-tabs">
+                  <li ng-repeat="tab in tabs" 
+                      ng-class="{active: isActiveTab($index)}"
+                      can-do-action="{{tab.permission}}">
+                      <a ng-show="tab.active" ng-click="changeTab($index)">{{tab.name}}</a>
+                  </li>
+                </ul>
+                
+                <div class="actions">
+                    <a class="btn btn-primary" id="cancel" history-back><i class="icon icon-remove-sign"></i>Close</a>
+                    <a class="btn btn-success" unsaved-warning-clear id="save" ng-show="basicForm.$dirty || usersVendors.$dirty" ng-click="save(false)"><i class="icon icon-ok-sign"></i>Save</a>
+                </div>
+            
+            </div>
+        </div>
+
+        <form name="basicForm" class="row" ng-show="isActiveTab(0)" unsaved-warning-form>
+
+             <div class="span9 clearfix alert alert-error" ng-show="basicForm.FacultyErrors && showGlobalErrorMsg(basicForm.FacultyErrors)">Form not saved. Please address the errors below.</div>
+
+            <div class="span3" can-do-action="changeAvatar">
+                
+                <h3>Avatar</h3>
+                
+                <img class="img-circle img-large" ng-src="{{user.avatar.original}}" title="Logo" default-image="user" />
+                
+                <br /><br />
+                <button ng-disabled="!user._id" ng-click="pickImage(); basicForm.$setDirty();" class="btn btn-primary">Pick Avatar</button>
+               
+            </div>
+
+            <div class="span3">
+                
+                <h3>Name</h3>
+                
+                <label>First Name</label>
+                <input 
+                    name="user.name.first" 
+                    type="text" 
+                    placeholder="" 
+                    ng-model="user.name.first"
+                    ng-blur="Validator.validateField(basicForm['user.name.first'], basicForm)"
+                    ng-change="Validator.removeInvalidation(basicForm['user.name.first'], basicForm)"
+                    required>
+
+                <div ng-show="basicForm.FacultyErrors['user.name.first']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['user.name.first']}}
+                </div>
+                
+                <label>Last Name</label>
+                <input 
+                    name="user.name.last" 
+                    type="text" 
+                    placeholder="" 
+                    ng-model="user.name.last"
+                    ng-blur="Validator.validateField(basicForm['user.name.last'], basicForm)"
+                    ng-change="Validator.removeInvalidation(basicForm['user.name.last'], basicForm)"
+                    required>
+
+                <div ng-show="basicForm.FacultyErrors['user.name.last']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['user.name.last']}}
+                </div>
+                
+            </div>
+
+            <div class="span3">
+                
+                <h3>Contact</h3>
+                
+                <label>Email</label>
+                <input 
+                    name="user.email" 
+                    type="email" 
+                    placeholder="" 
+                    ng-model="user.email"
+					ui-validate="{email: 'Validator.validateEmail($value)'}"
+                    ng-blur="Validator.validateField(basicForm['user.email'], basicForm)"
+                    ng-change="Validator.removeInvalidation(basicForm['user.email'], basicForm)"
+                    required>
+
+                <div ng-show="basicForm.FacultyErrors['user.email']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['user.email']}}
+                </div>
+                
+                <label>Phone</label>
+                <input 
+                    name="user.phoneNumber" 
+                    type="text" 
+                    placeholder="" 
+                    ng-model="user.phoneNumber"
+                    ui-mask="(999) 999-9999"
+                    ui-validate="{phone: 'Validator.validatePhone($value)'}"
+                    ng-blur="Validator.validateField(basicForm['user.phoneNumber'], basicForm)"
+                    ng-change="Validator.removeInvalidation(basicForm['user.phoneNumber'], basicForm)">
+
+                <div ng-show="basicForm.FacultyErrors['user.phoneNumber']" class="alert alert-error alert-tooltip">
+                    {{basicForm.FacultyErrors['user.phoneNumber']}}
+                </div>
+                
+            </div>
+            
+            <div class="span10" can-do-action="changeRoles-users">
+                <h3>User Role</h3>
+                <div class="row">
+                    <div class="span3">
+                        <span ng-show="!canChangeRole() && user.role == 'admin'">
+                            <p class="alert alert-error pull-left">You can't remove the admin role from yourself.</p>
+                            <br/><br/><br/>
+                        </span>
+                        <span ng-show="user._id">
+                            <select ng-disabled="!canChangeRole()" ng-model="user.role" ng-options="role.value as role.label for role in roles"></select>
+                        </span>
+                        <span ng-show="!user._id">
+                            <p class="alert alert-error pull-left">Please save this user before assigning a role.</p>
+                        </span>
+                    </div>
+                </div>
+            
+            </div>
+            
+            <div class="span10" can-do-action="welcomeEmail-users">
+                <div ng-show="user._id" >
+                    <h3>Send Welcome Email</h3>
+                    <div class="row">
+                        <div class="span4">
+                            <button class="btn btn-primary" ng-click="welcomeEmail()"><i class="icon-envelope"></i>&nbsp;{{buttonText}}<i class='icon icon-spinner icon-spin' ng-show="processing"></i></button>
+                            <br /><br />
+                            <p>This will send a welcome email to {{user.fullname}} containing their email and a link to login to the dashboard.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <span ng-show="canDeleteUser()">
+                <button delete-this can-do-action="delete-anything" id="user._id" redirect="/dashboard/users" type="User" model="modelObject"></button>
+            </span>
+            
+        </form>
+        
+        <form name="usersVendors" class="row" ng-show="isActiveTab(1)" unsaved-warning-form can-do-action="changeVendors-users"> 
+
+            <div class="span9 clearfix alert alert-error" ng-show="userVendors.FacultyErrors && showGlobalErrorMsg(userVendors.FacultyErrors)">Form not saved. Please address the errors below.</div>
+            
+            <h3>Manage Vendors for this user</h3>
+            <table class="table table-rate-sheets">
+                <thead>
+                    <th></th>
+                    <th>Vendor</th>
+                    <th></th>
+                    <th>Role</th>
+                </thead>
+                
+                <tbody>
+                    <tr ng-repeat="item in vendors" ng-hide="checkShowVendor(item)">
+                        <td>
+                            <button ng-click="toggleActive(item); usersVendors.$setDirty();" class="btn" ng-class="{'btn-success' : item.active}">
+                                <i class="icon " ng-class="{'icon-check' : item.active, 'icon-check-empty' : !item.active}"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <img class="img-rounded img-medium" ng-show="item.logo.original" ng-src="{{item.logo.original}}" />
+                        </td>
+                        <td>
+                            <p>{{item.name}}</p>
+                        </td>
+                        <td>
+                            <p ng-show="item.active">{{user.role}}</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </form>
+        
+        
+        
+        <form name="passwordForm" class="row" ng-show="isActiveTab(2)" ng-controller="passwordChangeController" >
+            <div class="span4">
+                <h3>Change Password</h3>
+                
+                <p class="alert" ng-class="{ 'alert-success': changestatus == true, 'alert-error': changestatus == false}" ng-show="changeMessage">{{changeMessage}}</p>
+                
+                <label>Current Password</label>
+                <input name="current_password" type="password" placeholder="" required name="current_password" ng-model="current_password">
+                
+                <p class="alert alert-error" ng-show="passwordForm.current_password.$dirty && !!passwordForm.current_password.$error.required">
+                Current password is required
+                </p>
+                
+                <label>New Password</label>
+                <input name="new_password" type="password" required placeholder="" name="new_password" ng-model="new_password">
+                
+                <p class="alert alert-error" ng-show="passwordForm.new_password.$dirty && !!passwordForm.new_password.$error.required">
+                New password is required
+                </p>
+                
+                
+                <label>Confirm New Password</label>
+                <input ng-model="confirm_password" type="password" 
+                    placeholder="" 
+                    ng-minlength="6"
+                    ng-maxlength="20"
+                    required
+                    name="confirm_password" 
+                    ui-validate="{ match: '$value==new_password' }"
+                    ui-validate-watch=" 'new_password' ">
+                
+                <br/>
+                <p class="alert alert-error" ng-show="passwordForm.confirm_password.$dirty && !!passwordForm.confirm_password.$error.required">
+                Confirm password is required
+                </p>
+                
+                <p class="alert alert-error" ng-show="passwordForm.confirm_password.$dirty && !!passwordForm.confirm_password.$error.match">
+                Passwords do not match!
+                </p>
+                
+                <p class="alert alert-error" ng-show="passwordForm.confirm_password.$dirty && !!passwordForm.confirm_password.$error.minlength">
+                Password must be at least 6 characters
+                </p>
+                
+                <p class="alert alert-error" ng-show="passwordForm.confirm_password.$dirty && !!passwordForm.confirm_password.$error.maxlength">
+                Password must be less than 20 characters
+                </p>
+                
+                <p class="alert alert-success" ng-show="passwordForm.confirm_password.$dirty && passwordForm.$valid">
+                Thumbs up!
+                </p>
+                
+                <button class="btn btn-primary" ng-disabled="passwordForm.$invalid" ng-click="changePassword()">Change Password</button>
+                
+            </div>
+        </form>
+        
+    </div>
+
+</div>

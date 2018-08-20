@@ -1,0 +1,102 @@
+<div class="row area" >
+    
+    <div class="span8 offset1">
+        <img class="img-rounded img-large vendor-logo" ng-src="{{vendor.logo.original}}" ng-show="vendor.logo.original" title="{{vendor.name}}" />
+    </div>
+<!--
+    
+    <div class="span2">
+        <img class="pull-right poweredby img-medium" src="img/powered_by.png" />
+    </div>
+-->
+
+</div>
+<div class="row area">
+    
+    <div class="offset1 span3 vendor-address">
+        <label>Vendor</label>
+        <p>{{vendor.name}}</p>
+        <p ng-show="vendor.businessAddress.address1">{{vendor.businessAddress.address1}}</p>
+        <p ng-show="vendor.businessAddress.address2">{{vendor.businessAddress.address2}}</p>
+        <p ng-show="vendor.businessAddress.city && vendor.businessAddress.state && vendor.businessAddress.zip">{{vendor.businessAddress.city}}, {{vendor.businessAddress.state}} {{vendor.businessAddress.zip}}</p>
+        <p ng-show="vendor.contactPerson.email"><a mail-to="{{vendor.contactPerson.email}}"></a></p>
+        <p ng-show="vendor.contactPerson.phone"><a call-to="{{vendor.contactPerson.phone}}"></a></p>
+    </div>
+    
+    <div class="span3 application-address">
+        <label>Applicant</label>
+        <p>{{quote.company.contactPerson.name}}</p>
+        <p ng-show="quote.company.businessAddress.address1">{{quote.company.businessAddress.address1}}</p>
+        <p ng-show="quote.company.businessAddress.address2">{{quote.company.businessAddress.address1}}</p>
+        <p ng-show="quote.company.businessAddress.city && quote.company.businessAddress.state && quote.company.businessAddress.zip">{{quote.company.businessAddress.city}}, {{quote.company.businessAddress.state}} {{quote.company.businessAddress.zip}}</p>
+        <p ng-show="quote.company.contactPerson.email"><a mail-to="{{quote.company.contactPerson.email}}"></a></p>
+        <p ng-show="quote.company.contactPerson.phone"><a call-to="{{quote.company.contactPerson.phone}}"></a></p>
+    </div>
+    
+    <div class="span4 text-right">
+        <label>{{quote.created | date:longDate }}</label>
+    </div>
+
+</div>
+
+<div class="row area">
+    <div class="span10 offset1">
+    <p>Dear {{quote.company.contactPerson.name}},<br/><br/>
+    
+    Thank you for allowing {{vendor.name}} to arrange financing for your business equipment needs. Below are options you may choose from in making your equipment financing decisions. If you have any questions, please contact {{vendor.name}} <span ng-show="vendor.contactPerson.email"> by e-mail at {{vendor.contactPerson.email}}</span><span ng-show="vendor.contactPerson.email && vendor.contactPerson.phone"> or call </span><span ng-show="!vendor.contactPerson.email && vendor.contactPerson.phone"> by calling </span><span ng-show="vendor.contactPerson.phone"> {{vendor.contactPerson.phone}}</span>.</p>
+    </div>
+</div>
+
+<div class="row area">
+    <div class="span10 offset1">
+        <p><strong>Total Cost:</strong> {{quote.totalCostDisplay}}</p>
+        <p><strong>Description of Equipment:</strong> {{quote.description}}</p>
+        <p ng-show="quote.customField.value"><strong>{{quote.customField.displayName || vendor.customField.displayName}}</strong>
+        {{quote.customField.value}}
+        </p>
+    </div>
+</div>
+
+<div class="row" ng-show="didQuote">
+    <div class="span10 offset1">
+
+        <div ng-repeat="payment in quote.payments">
+            <strong>{{payment.programName}}</strong>
+            <p ng-show="programs[0].publicNotes">{{programs[0].publicNotes}}</p>
+            <table class="table" ng-repeat="option in payment.options">
+                <thead>
+                    <th class="span3">{{option.name}}</th>
+                    <th class="span1" ng-repeat="item in option.rates">{{item.term}}</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{quote.totalCostDisplay}}</td>
+                        <td ng-repeat="item in option.rates">
+                            {{item.paymentDisplay}}<br/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row area">        
+    <div class="span10 offset1">
+        <div ng-show="vendor.legalTerms"><strong>Terms:</strong> {{vendor.legalTerms}}</div>
+    </div>
+</div>
+
+<div class="row area area-fine-print">        
+    <div class="span10 offset1">
+        <hr />
+        <p>Quotes expire after 30 (Thirty) days from today, which is {{quote.created | date:longDate }}</p>
+        <p>Link to quote: <a ng-href="{{permalink}}">{{permalink}}</a></p>
+    </div>
+</div>
+
+
+

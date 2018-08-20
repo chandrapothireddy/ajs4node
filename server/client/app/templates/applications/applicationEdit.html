@@ -1,0 +1,335 @@
+<div class="row has-title-bar" ng-init="edit()" unsaved-warning-group>
+    <div class="span2 sidebar" ng-include="'app/templates/nav.html'"></div>
+    <div class="span10 offset2">
+        <div class="row title-bar">
+            <div class="span10">
+                <h2><i class="icon icon-file-text-alt"></i>{{!application._id && 'New' || 'Edit'}} Application</h2>
+                
+                <div class="actions">
+                    <a class="btn btn-primary" id="cancel" history-back>
+                        <i class="icon icon-remove-sign"></i>Close
+                    </a>
+                    <a
+                        class="btn btn-success"
+                        id="save"
+                        ng-show="showAppEmail()"
+                        ng-click="complete()">
+                        Complete & Email to Credit
+                    </a>
+                    <a
+                        class="btn btn-success"
+                        unsaved-warning-clear
+                        id="save"
+                        ng-show="applicationForm.$dirty"
+                        ng-click="save(false)">
+                        <i class="icon icon-ok-sign"></i>Save
+                    </a>
+                </div>
+            
+            </div>
+        </div>
+
+        <form name="applicationForm" class="row" unsaved-warning-form>
+            <div class="span9 clearfix alert alert-error" ng-show="applicationForm.FacultyErrors && showGlobalErrorMsg(applicationForm.FacultyErrors)">Form not saved. Please address the errors below.</div>
+            <div class="span10">
+                <h1 ng-show="!application.vendorId.logo">{{application.vendorId.name}}</h1>
+                <a ng-show="application.vendorId.website" href="{{vendor.website}}">
+                    <img class="img-rounded img-large vendor-logo" ng-src="{{application.vendorId.logo.original}}" ng-show="application.vendorId.logo.original" title="{{application.vendorId.name}}" />
+                </a>
+                <img class="img-rounded img-large vendor-logo" ng-src="{{application.vendorId.logo.original}}" ng-show="application.vendorId.logo.original && !application.vendorId.website" title="{{application.vendorId.name}}" />
+            
+                <br /><br />
+            </div>  
+                    
+            <div class="span10">
+                <legend>Status</legend>
+                
+                <ul class="nav nav-pills statuses">
+                    <li ng-repeat="item in statuses" ng-class="{ active: item.value == application.status }">
+                        <a>{{item.label}}</a>
+                    </li>
+                </ul>
+                
+                <br /><br />
+            </div>
+            
+            <div class="span10">
+                <legend>Payment Information</legend>
+                <strong>{{application.payment.programName}}</strong>
+                <table class="table">
+                    <thead>
+                        <th class="span3">{{application.payment.buyoutOption}}</th>
+                        <th class="span1">{{application.payment.term}}</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{application.payment.totalCostDisplay}}</td>
+                            <td>
+                                {{application.payment.paymentDisplay}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <label>Description:<label>
+                <textarea ng-model="application.description"></textarea>
+                
+                <p ng-show="application.customField">
+                    <label>{{application.customField.displayName}}</label>
+                    <input type="text" ng-model="application.customField.value">
+                </p>
+                
+                <br /><br />
+            </div>
+            
+            <div class="span5">
+                <legend>Company Information</legend>
+                
+                <label>Full Legal Business Name</label>
+                <input 
+                    name="application.company.fullLegalBuisnessName" 
+                    type="text" 
+                    ng-model="application.company.fullLegalBusinessName" 
+                    required
+                    ng-blur="Validator.validateField(applicationForm['application.company.fullLegalBuisnessName'], applicationForm)"
+                    ng-change="Validator.removeInvalidation(applicationForm['application.company.fullLegalBuisnessName'], applicationForm)">
+
+                <div ng-show="applicationForm.FacultyErrors['application.company.fullLegalBuisnessName']" class="alert alert-error alert-tooltip">
+                    {{applicationForm.FacultyErrors['application.company.fullLegalBuisnessName']}}
+                </div>
+                
+                <label>Address 1</label>
+                <input 
+                    name="application.company.businessAddress.address1"
+                    type="text" 
+                    ng-model="application.company.businessAddress.address1"
+                    required
+                    ng-blur="Validator.validateField(applicationForm['application.company.businessAddress.address1'], applicationForm)"
+                    ng-change="Validator.removeInvalidation(applicationForm['application.company.businessAddress.address1'], applicationForm)">
+
+                    <div ng-show="applicationForm.FacultyErrors['application.company.businessAddress.address1']" class="alert alert-error alert-tooltip">
+                        {{applicationForm.FacultyErrors['application.company.businessAddress.address1']}}
+                    </div>
+                
+                <label>Address 2</label>
+                <input 
+                    name="application.company.businessAddress.address2"
+                    type="text" 
+                    ng-model="application.company.businessAddress.address2">
+                
+                <label>City</label>
+                <input 
+                    name="application.company.businessAddress.city"
+                    type="text" 
+                    ng-model="application.company.businessAddress.city"
+                    required
+                    ng-blur="Validator.validateField(applicationForm['application.company.businessAddress.city'], applicationForm)"
+                    ng-change="Validator.removeInvalidation(applicationForm['application.company.businessAddress.city'], applicationForm)">
+
+                    <div ng-show="applicationForm.FacultyErrors['application.company.businessAddress.city']" class="alert alert-error alert-tooltip">
+                        {{applicationForm.FacultyErrors['application.company.businessAddress.city']}}
+                    </div>
+                
+                <label>State</label>
+                <select 
+                    name="application.company.businessAddress.state"
+                    ng-model="application.company.businessAddress.state" 
+                    required
+                    ng-options="state.abbreviation as state.name for state in states1"
+                    ng-blur="Validator.validateField(applicationForm['application.company.businessAddress.state'], applicationForm)"
+                    ng-change="Validator.removeInvalidation(applicationForm['application.company.businessAddress.state'], applicationForm)"></select>
+
+                    <div ng-show="applicationForm.FacultyErrors['application.company.businessAddress.state']" class="alert alert-error alert-tooltip">
+                        {{applicationForm.FacultyErrors['application.company.businessAddress.state']}}
+                    </div>
+                
+                <label>Zip</label>
+                <input 
+                    name="application.company.businessAddress.zip"
+                    type="text" 
+                    ng-model="application.company.businessAddress.zip"
+                    number-only
+                    ng-blur="Validator.validateField(applicationForm['application.company.businessAddress.zip'], applicationForm)"
+                    ng-change="Validator.removeInvalidation(applicationForm['application.company.businessAddress.zip'], applicationForm)"
+                    ui-validate="{zip: 'Validator.validateZip($value)'}"
+                    required>
+
+                    <div ng-show="applicationForm.FacultyErrors['application.company.businessAddress.zip']" class="alert alert-error alert-tooltip">
+                        {{applicationForm.FacultyErrors['application.company.businessAddress.zip']}}
+                    </div>
+        
+            </div>
+             
+            <div class="span5"> 
+                
+                <legend>Primary Contact Information</legend>
+            
+                <label>Contact Name</label>
+                <input
+                    name="application.company.contactPerson.name"
+                    type="text" 
+                    ng-model="application.company.contactPerson.name"
+                    ng-blur="Validator.validateField(applicationForm['application.company.contactPerson.name'], applicationForm)"
+                    ng-change="Validator.removeInvalidation(applicationForm['application.company.contactPerson.name'], applicationForm)"
+                    required >
+
+                    <div ng-show="applicationForm.FacultyErrors['application.company.contactPerson.name']" class="alert alert-error alert-tooltip">
+                        {{applicationForm.FacultyErrors['application.company.contactPerson.name']}}
+                    </div>
+            
+                <label>Email</label>
+                <input
+                    name="application.company.contactPerson.email"
+                    type="email" 
+                    ng-model="application.company.contactPerson.email"
+                    ng-blur="Validator.validateField(applicationForm['application.company.contactPerson.email'], applicationForm)"
+                    ng-change="Validator.removeInvalidation(applicationForm['application.company.contactPerson.email'], applicationForm)"
+					ui-validate="{email: 'Validator.validateEmail($value)'}"
+                    required >
+
+                    <div ng-show="applicationForm.FacultyErrors['application.company.contactPerson.email']" class="alert alert-error alert-tooltip">
+                        {{applicationForm.FacultyErrors['application.company.contactPerson.email']}}
+                    </div>
+                
+                <label>Phone</label>
+                <input 
+                    name="application.company.contactPerson.phone"
+                    type="text" 
+                    ng-model="application.company.contactPerson.phone"
+                    ng-blur="Validator.validateField(applicationForm['application.company.contactPerson.phone'], applicationForm)"
+                    ng-change="Validator.removeInvalidation(applicationForm['application.company.contactPerson.phone'], applicationForm)"
+                    ui-mask="(999) 999-9999"
+                    ui-validate="{phone: 'Validator.validatePhone($value)'}"
+                    required >
+
+                    <div ng-show="applicationForm.FacultyErrors['application.company.contactPerson.phone']" class="alert alert-error alert-tooltip">
+                        {{applicationForm.FacultyErrors['application.company.contactPerson.phone']}}
+                    </div>
+                
+                <p>Preferred contact method: {{application.company.contactPerson.contactMethod}}</p>
+                
+            </div>
+            
+            <div class="span10" can-do-action="viewGuarantor">
+                <div class="row">
+                    <div class="span5">
+            
+                        <legend>Personal Guarantor</legend>
+                        
+                        <label>Name</label>
+                        <input 
+                            name="application.guarantor.contactPerson.name"
+                            type="text" 
+                            ng-model="application.guarantor.contactPerson.name"
+                            ng-blur="Validator.validateField(applicationForm['application.guarantor.contactPerson.name'], applicationForm)"
+                            ng-change="Validator.removeInvalidation(applicationForm['application.guarantor.contactPerson.name'], applicationForm)">
+
+                            <div ng-show="applicationForm.FacultyErrors['application.guarantor.contactPerson.name']" class="alert alert-error alert-tooltip">{{applicationForm.FacultyErrors['application.guarantor.contactPerson.name']}}</div>
+
+                            <label for="contactSocialGuarantor">Social Security Number</label>
+                            <input
+                                type="text" 
+                                name="contactSocialGuarantor" 
+                                id="contactSocialGuarantor" 
+                                ui-validate="{social: 'Validator.validateSocial($value)'}"
+                                class="input-block" 
+                                ng-model="application.guarantor.socialSecurityNumber" 
+                                ui-mask="999-99-9999" 
+                                ng-blur="Validator.validateField(ApplicationToolForm.contactSocialGuarantor, ApplicationToolForm)">
+                
+                            <div ng-show="ApplicationToolForm.FacultyErrors.contactSocialGuarantor" class="alert alert-error alert-tooltip">
+                                {{ApplicationToolForm.FacultyErrors.contactSocialGuarantor}}
+                            </div>
+                
+                    </div>
+                     
+                    <div class="span5"> 
+                    
+                        <legend>Personal Guarantor Contact</legend>
+                    
+                        <label>Email</label>
+                        <input
+                            name="application.guarantor.contactPerson.email"
+                            type="email" 
+                            ng-model="application.guarantor.contactPerson.email"
+                            ng-blur="Validator.validateField(applicationForm['application.guarantor.contactPerson.email'], applicationForm)"
+                            ng-change="Validator.removeInvalidation(applicationForm['application.guarantor.contactPerson.email'], applicationForm)">
+
+                        <div ng-show="applicationForm.FacultyErrors['application.guarantor.contactPerson.email']" class="alert alert-error alert-tooltip">{{applicationForm.FacultyErrors['application.guarantor.contactPerson.email']}}</div>
+                        
+                        <label>Phone</label>
+                        <input
+                            name="application.guarantor.contactPerson.phone"
+                            type="text" 
+                            ng-model="application.guarantor.contactPerson.phone"
+                            ng-blur="Validator.validateField(applicationForm['application.guarantor.contactPerson.phone'], applicationForm)"
+                            ng-change="Validator.removeInvalidation(applicationForm['application.guarantor.contactPerson.phone'], applicationForm)"
+                            ui-mask="(999) 999-9999"
+                            ui-validate="{phone: 'Validator.validatePhone($value)'}"
+                            >
+                        <div ng-show="applicationForm.FacultyErrors['application.guarantor.contactPerson.phone']" class="alert alert-error alert-tooltip">{{applicationForm.FacultyErrors['application.guarantor.contactPerson.phone']}}</div>
+                        
+                        <label>Address 1</label>
+                        <input 
+                            name="application.guarantor.homeAddress.address1"
+                            type="text" 
+                            ng-model="application.guarantor.homeAddress.address1"
+                            ng-blur="Validator.validateField(applicationForm['application.guarantor.homeAddress.address1'], applicationForm)"
+                            ng-change="Validator.removeInvalidation(applicationForm['application.guarantor.homeAddress.address1'], applicationForm)">
+
+                        <div ng-show="applicationForm.FacultyErrors['application.guarantor.homeAddress.address1']" class="alert alert-error alert-tooltip">{{applicationForm.FacultyErrors['application.guarantor.homeAddress.address1']}}</div>
+                        
+                        <label>Address 2</label>
+                        <input
+                            name="application.guarantor.homeAddress.address2"
+                            type="text" 
+                            ng-model="application.guarantor.homeAddress.address2">
+                        
+                        <label>City</label>
+                        <input
+                            name="application.guarantor.homeAddress.city" 
+                            type="text" 
+                            ng-model="application.guarantor.homeAddress.city"
+                            ng-blur="Validator.validateField(applicationForm['application.guarantor.homeAddress.city'], applicationForm)"
+                            ng-change="Validator.removeInvalidation(applicationForm['application.guarantor.homeAddress.city'], applicationForm)">
+
+                        <div ng-show="applicationForm.FacultyErrors['application.guarantor.homeAddress.city']" class="alert alert-error alert-tooltip">{{applicationForm.FacultyErrors['application.guarantor.homeAddress.city']}}</div>
+                        
+                        <label>State</label>
+                        <select
+                            name="application.guarantor.homeAddress.state" 
+                            ng-model="application.guarantor.homeAddress.state" 
+                            ng-options="state.abbreviation as state.name for state in states1"
+                            ng-blur="Validator.validateField(applicationForm['application.guarantor.homeAddress.state'], applicationForm)"
+                            ng-change="Validator.removeInvalidation(applicationForm['application.guarantor.homeAddress.state'], applicationForm)"></select>
+
+
+                        <div ng-show="applicationForm.FacultyErrors['application.guarantor.homeAddress.state']" class="alert alert-error alert-tooltip">{{applicationForm.FacultyErrors['application.guarantor.homeAddress.state']}}</div>
+                        
+                        <label>Zip</label>
+                        <input
+                            name="application.guarantor.homeAddress.zip" 
+                            type="text" 
+                            ng-model="application.guarantor.homeAddress.zip"
+                            ng-blur="Validator.validateField(applicationForm['application.guarantor.homeAddress.zip'], applicationForm)"
+                            ng-change="Validator.removeInvalidation(applicationForm['application.guarantor.homeAddress.zip'], applicationForm)"
+                            ui-validate="{zip: 'Validator.validateZip($value)'}">
+
+                        <div ng-show="applicationForm.FacultyErrors['application.guarantor.homeAddress.zip']" class="alert alert-error alert-tooltip">{{applicationForm.FacultyErrors['application.guarantor.homeAddress.zip']}}</div>
+                                   
+                
+                    </div>    
+                    
+                </div>
+                
+            </div>
+            
+
+        </form>
+        
+        <button delete-this can-do-action="delete-anything" id="application._id" redirect="/dashboard/applications" type="Application" model="modelObject"></button>
+
+    </div>
+</div>
+
+

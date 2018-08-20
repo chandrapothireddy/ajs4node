@@ -1,0 +1,401 @@
+<div class="stretch">
+    
+    <div class="row vendorSection area" ng-show="vendor._id">
+        <div class="span8 offset1">
+            <h2 ng-show="!vendor.logo.original">{{vendor.name}}</h2>
+            <a ng-show="vendor.website" href="{{vendor.website}}" target="_blank">
+                <img class="img-rounded img-large vendor-logo" ng-src="{{vendor.logo.original}}" ng-show="vendor.logo.original" title="{{vendor.name}}" />
+            </a>
+            <img class="img-rounded img-large vendor-logo" ng-src="{{vendor.logo.original}}" ng-show="vendor.logo.original && !vendor.website" title="{{vendor.name}}" />
+        </div>
+        
+                
+        <div class="span2 poweredbyWrapper" ng-hide="vendor.whiteLabel">
+            <img class="pull-right poweredby img-medium" src="img/powered_by.png" />
+        </div>
+
+    </div>
+
+    <div class="row area" ng-show="!didQuote && !vendor._id">
+
+        <div class="span8 offset1">
+                
+            <label>Choose your vendor</label>
+            <select ng-show="!didQuote && !haveVendor" id="vendorName" ng-model="vendor" ng-options="value as value.name for (key, value) in vendors">
+                <option value="">---- Choose Vendor ----</option>
+            </select>
+        </div>
+        
+    </div>
+
+    <div class="row">
+
+    </div>
+
+</div>
+
+<form name="ApplicationToolForm" ng-show="!finished" novalidate>
+    
+    <div class="row area"> 
+        <div class="span10 offset1">
+            <h3>Payment Information</h3>
+        </div>  
+        <div class="span10 offset1">            
+            <strong>{{application.payment.programName}}</strong>
+            <table class="table">
+                <thead>
+                    <th class="span3">{{application.payment.buyoutOption}}</th>
+                    <th class="span1">{{application.payment.term}}</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{application.payment.totalCostDisplay}}</td>
+                        <td>
+                            {{application.payment.paymentDisplay}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p><strong>Description:</strong>&nbsp;{{application.description}}</p>
+            
+            <p ng-show="application.customField">
+                <strong>{{application.customField.displayName}}:</strong> {{application.customField.value}}
+            </p>
+        </div>
+    </div>
+
+
+    <div class="row area">   
+        <div class="span10 offset1">
+            <div class="row">
+                <div class="span10 text-center">
+                    <h3>Company Information</h3>
+                </div>
+            </div>
+            <div>
+                <div class="row area">
+                    <div class="span5">
+                        <!-- ############################################################ -->
+                        <!-- ######################## Company Name ###################### -->
+                        <!-- ############################################################ -->
+                        <label for="companyName">Company Name</label>
+                        <input ng-required="true" type="text" name="companyName" id="companyName" class="input-block" placeholder="" ng-model="application.company.fullLegalBusinessName" required>
+
+                        <div ng-if="(ApplicationToolForm.$submitted || ApplicationToolForm.companyName.$touched) && ApplicationToolForm.companyName.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the companyName</div> 
+
+                    </div>
+                    <div class="span5">
+                        <!-- ############################################################ -->
+                        <!-- ######################## Address One ####################### -->
+                        <!-- ############################################################ -->
+                        <label for="addressOne">Address 1</label>
+                        <input ng-required="true" type="text" name="addressOne" id="addressOne" class="input-block" placeholder="" ng-model="application.company.businessAddress.address1" required>
+
+                        <div ng-if="(ApplicationToolForm.$submitted || ApplicationToolForm.addressOne.$touched) && ApplicationToolForm.addressOne.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter this field</div>
+                        
+                        <!-- ############################################################ -->
+                        <!-- ######################## Address Two ####################### -->
+                        <!-- ############################################################ -->
+                        <label for="addressTwo">Address 2</label>
+                        <input type="text" name="addressTwo" id="addressTwo" class="input-block" placeholder="" ng-model="application.company.businessAddress.address2">
+
+                        <!-- ############################################################ -->
+                        <!-- ############################ City ########################## -->
+                        <!-- ############################################################ -->
+                        <label for="city">City</label>
+                        <input ng-required="true" type="text" name="city" id="city" placeholder="" class="input-block" ng-model="application.company.businessAddress.city" required>
+
+                         <div ng-if="(ApplicationToolForm.$submitted || ApplicationToolForm.city.$touched) && ApplicationToolForm.city.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the city</div> 
+                        
+                        <!-- ############################################################ -->
+                        <!-- ############################ State ######################### -->
+                        <!-- ############################################################ -->
+                        <label for="state">State</label>
+                        <select ng-required="true" class="input-block" name="state" id="state" ng-model="application.company.businessAddress.state" ng-options="state.abbreviation as state.name for state in states1" required></select>
+
+                        <div ng-if="ApplicationToolForm.$submitted && ApplicationToolForm.state.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the state</div> 
+                        
+                        <!-- ############################################################ -->
+                        <!-- ############################## Zip ######################### -->
+                        <!-- ############################################################ -->
+                        <label for="zip">Zip</label>
+                        <input  type="text" name="application.company.businessAddress.zip" id="zip" placeholder="" class="input-block" 
+						ng-model="application.company.businessAddress.zip"
+						number-only
+						ng-blur="Validator.validateField(ApplicationToolForm['application.company.businessAddress.zip'], ApplicationToolForm)"
+						ng-change="Validator.removeInvalidation(ApplicationToolForm['application.company.businessAddress.zip'], ApplicationToolForm)"
+						ui-validate="{zip: 'Validator.validateZip($value)'}"
+						required>
+
+                     <div ng-show="ApplicationToolForm.FacultyErrors['application.company.businessAddress.zip']" class="alert alert-error alert-tooltip">
+                        {{ApplicationToolForm.FacultyErrors['application.company.businessAddress.zip']}}
+                    </div> 
+                    </div>
+                </div>
+				<div ng-if="(ApplicationToolForm.companyName.$valid && ApplicationToolForm.addressOne.$valid &&  ApplicationToolForm.city.$valid && ApplicationToolForm.state.$valid && ApplicationToolForm['application.company.businessAddress.zip'].$valid)" class="formGroupFinished">
+                    </div>	
+            </div> <!-- End form group -->
+        </div>
+    </div>
+
+    <div class="row area area-dark">   
+        <div class="span10 offset1">
+
+            <div class="row">
+                <div class="span10">
+                    <h3>Contact Information</h3>
+                </div>
+            </div>
+            <div>
+                <div class="row area">
+                    <div class="span5">
+                        <!-- ############################################################ -->
+                        <!-- ####################### Contact Name ####################### -->
+                        <!-- ############################################################ -->
+                        <label for="contactName">Contact Name</label>
+                        <input ng-required="true" type="text" class="input-block" id="contactName" placeholder="" ng-model="application.company.contactPerson.name" name="contactName" required>
+
+                       
+						<div ng-if="(ApplicationToolForm.$submitted || ApplicationToolForm.contactName.$touched) && ApplicationToolForm.contactName.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the contactName</div> 
+                    </div>
+                    <div class="span5">
+                        <!-- ############################################################ -->
+                        <!-- ############################# Email ######################## -->
+                        <!-- ############################################################ -->
+                        <label for="contactEmail">Email</label>
+                        <input ng-required="true" type="email" name="contactEmail" id="contactEmail" class="input-block" placeholder="" ng-model="application.company.contactPerson.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" required>
+
+                        <div ng-if="(ApplicationToolForm.$submitted || ApplicationToolForm.contactEmail.$touched) && ApplicationToolForm.contactEmail.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the Email</div>
+						  
+						  <div ng-if="ApplicationToolForm.contactEmail.$dirty && ApplicationToolForm.contactEmail.$error.pattern" class="alert alert-error alert-tooltip required">
+						  Please enter valid email address
+						  </div>
+
+                        <!-- ############################################################ -->
+                        <!-- ############################# Phone ######################## -->
+                        <!-- ############################################################ -->
+                        <label for="contactPhone">Phone</label>
+                        <input ng-required="true" type="text" name="contactPhone" id="contactPhone" class="input-block" placeholder="" ng-model="application.company.contactPerson.phone" ui-mask="(999) 999-9999" required>
+
+                        <div ng-if="(ApplicationToolForm.$submitted || ApplicationToolForm.contactPhone.$touched) && ApplicationToolForm.contactPhone.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the Phone</div> 
+                    
+                        <p>Preferred contact method</p>
+                        <a ng-init="application.company.contactPerson.contactMethod = 'email'" ng-click="application.company.contactPerson.contactMethod = 'email'" class="btn contact-method" ng-class="{active: application.company.contactPerson.contactMethod == 'email'}">Email</a>
+                        <a ng-click="application.company.contactPerson.contactMethod = 'phone'" class="btn contact-method" ng-class="{active: application.company.contactPerson.contactMethod == 'phone'}">Phone</a>
+                    </div>
+                </div>
+				<div ng-if="(ApplicationToolForm.contactPhone.$valid && ApplicationToolForm.contactEmail.$valid && ApplicationToolForm.contactName.$valid)" class="formGroupFinished">
+                         
+                        </div> 
+            </div> <!-- End form group -->
+        </div>
+    </div>
+
+    <div class="row" ng-show-"showPG()">
+    
+        <div class="span10 text-center offset1">
+            <h3>Please Tell Us More about Your Business</h3>
+        </div>
+    
+        <div class="span4 offset2">
+            <p>Are you a sole proprietor of this business?</p>
+            <a ng-click="application.soleProp = true" class="btn contact-method" ng-class="{active: application.soleProp == true}">Yes</a>
+            <a ng-click="application.soleProp = false" class="btn contact-method" ng-class="{active: application.soleProp == false}">No</a>
+        </div>
+        
+        <div class="span4 years-in-business">
+            <p>How many years have you been in business?</p>
+            <label>
+            
+            <input 
+                ng-required="true" 
+                required 
+                integer-only 
+                type="text" 
+                ng-model="application.yearsInBusiness" 
+                name="yearsInBusiness" 
+                />&nbsp;&nbsp;Years <sup class="required">*</sup></label>            
+            
+			<div ng-if="(ApplicationToolForm.$submitted || ApplicationToolForm.yearsInBusiness.$touched) && ApplicationToolForm.yearsInBusiness.$error.required" class="alert alert-error alert-tooltip required">
+               This field is required and must be an integer.
+			</div> 
+
+        </div>
+        
+        <div class="span6 offset3">
+            <p class="alert" ng-show="message">{{message}}</p>
+        </div>
+        
+    </div>
+ 
+    <div class="row" ng-show="needsMoreInfo() && showPG()">   
+        
+        <div class="span10 text-center offset1">
+            <h3>Personal Guarantor</h3>
+        </div>
+        
+        <div>
+            
+            <div class="row">
+                
+                <div class="span5 offset1">
+                                
+                    <label>Personal Guarantor Name</label>
+                    <input type="text" class="input-block" placeholder="" ng-model="application.guarantor.contactPerson.name">
+					
+					
+                    
+                    <label for="contactSocialGuarantor">Social Security Number</label>
+                    <input  
+                        type="text" 
+                        name="contactSocialGuarantor" 
+                        id="contactSocialGuarantor" 
+                        class="input-block" 
+                        ng-model="application.guarantor.socialSecurityNumber" 
+                        ui-mask="999-99-9999" 
+                       >
+        
+                    <div ng-if="ApplicationToolForm.contactSocialGuarantor.$touched && ApplicationToolForm.contactSocialGuarantor.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the social security number</div> 
+        
+                </div>
+                 
+                <div class="span5"> 
+                    
+                    <!-- ############################################################ -->
+                    <!-- ############## Guarantor Address One ####################### -->
+                    <!-- ############################################################ -->
+                    <label for="addressOneGuarantor">Address 1</label>
+                    <input type="text" name="addressOneGuarantor" id="addressOneGuarantor" class="input-block" placeholder="" ng-model="application.guarantor.homeAddress.address1" >
+        
+                    <div ng-if="ApplicationToolForm.addressOneGuarantor.$touched && ApplicationToolForm.addressOneGuarantor.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter this field</div> 
+                    
+                    <!-- ############################################################ -->
+                    <!-- ############## Guarantor Address Two ####################### -->
+                    <!-- ############################################################ -->
+                    <label for="addressTwoGuarantor">Address 2</label>
+                    <input type="text" name="addressTwoGuarantor" id="addressTwoGuarantor" class="input-block" placeholder="" ng-model="application.guarantor.homeAddress.address2" >
+        
+                  
+        
+                    <!-- ############################################################ -->
+                    <!-- ################## Guarantor City ########################## -->
+                    <!-- ############################################################ -->
+                    <label for="cityGuarantor">City</label>
+                    <input type="text" name="cityGuarantor" id="cityGuarantor" placeholder="" class="input-block" ng-model="application.guarantor.homeAddress.city">
+        
+                     <div ng-if="ApplicationToolForm.cityGuarantor.$touched && ApplicationToolForm.cityGuarantor.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the city</div> 
+                        
+                    
+                    <!-- ############################################################ -->
+                    <!-- ################## Guarantor State ######################### -->
+                    <!-- ############################################################ -->
+                    <label for="stateGuarantor">State</label>
+                    <select class="input-block" name="stateGuarantor" id="stateGuarantor" ng-model="application.guarantor.homeAddress.state" ng-options="state.abbreviation as state.name for state in states2" ></select>
+        
+                    <div ng-if="ApplicationToolForm.$submitted && ApplicationToolForm.stateGuarantor.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the state</div> 
+                    
+                    <!-- ############################################################ -->
+                    <!-- ##################### GuarantorZip ######################### -->
+                    <!-- ############################################################ -->
+					<label for="zipGuarantor">Zip</label>
+                    <input type="text" name="zipGuarantor" id="zipGuarantor" placeholder="" class="input-block" 
+					ng-model="application.guarantor.homeAddress.zip" 
+					number-only
+					ui-validate="{zip: 'Validator.validateZip($value)'}" 
+					ng-blur="Validator.validateField(ApplicationToolForm.zipGuarantor, ApplicationToolForm)"
+					ng-change="Validator.removeInvalidation(ApplicationToolForm.zipGuarantor, ApplicationToolForm)">
+					
+                    <div ng-show="ApplicationToolForm.FacultyErrors.zipGuarantor" class="alert alert-error alert-tooltip">
+                        {{ApplicationToolForm.FacultyErrors.zipGuarantor}}
+                    </div>
+                
+                    
+                    <!-- ############################################################ -->
+                    <!-- ################ GuarantorZip Email ######################## -->
+                    <!-- ############################################################ -->
+                    <label for="contactEmailGuarantor">Email</label>
+                    <input type="email" name="contactEmailGuarantor" id="contactEmailGuarantor" class="input-block" placeholder="" ng-model="application.guarantor.contactPerson.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/">
+        
+                      <div ng-if="ApplicationToolForm.contactEmailGuarantor.$touched && ApplicationToolForm.contactEmailGuarantor.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the Email</div>
+						  
+						  <div ng-if="ApplicationToolForm.contactEmailGuarantor.$dirty && ApplicationToolForm.contactEmailGuarantor.$error.pattern" class="alert alert-error alert-tooltip required">
+						  Please enter valid email address
+						  </div>
+        
+                    <!-- ############################################################ -->
+                    <!-- ################ GuarantorZip Phone ######################## -->
+                    <!-- ############################################################ -->
+                    <label for="contactPhoneGuarantor">Phone</label>
+                    <input type="text" name="contactPhoneGuarantor" id="contactPhoneGuarantor" class="input-block" placeholder="" ng-model="application.guarantor.contactPerson.phone" ui-mask="(999) 999-9999" >
+        
+                    <div ng-if="ApplicationToolForm.contactPhoneGuarantor.$touched && ApplicationToolForm.contactPhoneGuarantor.$error.required" class="alert alert-error alert-tooltip required">
+                          Please enter the Phone</div> 
+
+        
+                </div>
+                
+            </div>
+			<div class="formGroupFinished"> </div> 
+            
+        </div>
+    
+    </div>
+
+    <div>
+        <div class="row" ng-show="!finished">
+             
+            <div class="span10 text-center offset1">
+                <h3>Authorization</h3>
+            </div> 
+                
+            <div class="span10 offset1">
+                <label for="agreeToTerms" class="checkbox">
+                <input ng-required="true" name="agreeToTerms" id="agreeToTerms" type="checkbox" ng-model="application.agreeToTerms"/>
+                By checking this box, each undersigned individual(s), who is either a principal of the credit applicant listed below or a personal guarantor of its obligations, provides written instruction to Faculty Creative or its designee (and any assignee or potential assignee thereof) authorizing review of his or her personal credit profile from a national credit bureau. Such authorization shall extend to obtaining a credit profile in considering the application of the credit applicant and subsequently for the purpose of update, renewal or extension of such credit and for reviewing or collecting the resulting account. A photostatic or facsimile copy of this authorization shall be as valid as the original.
+                </label>
+                
+                <div ng-if="ApplicationToolForm.agreeToTerms.$touched && ApplicationToolForm.agreeToTerms.$error.required" class="alert alert-error alert-tooltip required">
+                          Please agree Terms</div> 
+
+                    </div>
+            </div>
+        
+        </div>
+    </div>
+    
+    <div class="row" ng-show="!finished">
+            
+        <div class="span10 offset1 text-center">
+            <hr />
+            <button type="submit" class="btn btn-primary btn-mega" id="saveApplication" ng-click="saveApplication()">Submit Application</button>
+        </div>
+    
+    </div>
+    </div>
+
+</form>
+
+<div class="row" ng-show="finished">
+
+    <div class="span6 offset3 text-center">
+    
+        <h2>Thanks for submitting an application. <br /> A representative will contact you soon.</h2> <!-- R2 #5 change, May 2016. -->
+        
+    </div>
+    
+</div>  
+
+<div class="row" ng-show="!finished" ng-include="'app/templates/tools/shared/terms.html'"></div>

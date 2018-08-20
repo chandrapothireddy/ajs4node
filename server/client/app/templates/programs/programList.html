@@ -1,0 +1,70 @@
+<div class="row has-title-bar has-no-tabs" ng-init="index()">
+    <div class="span2 sidebar" ng-include="'app/templates/nav.html'"></div>
+    <div class="span10 offset2">
+        
+        <div class="row title-bar">
+            <div class="span10">
+                    <h2><i class="icon icon-bar-chart"></i> Rate Sheets</h2>
+                <a id="addProgram" class="btn btn-primary actions" href="#/dashboard/programs/new"><i class="icon icon-plus-sign"></i>Add New Rate Sheet</a>
+            </div>
+        </div>
+        
+        <div class="row">  
+            <div class="span10">
+                
+                <div class="row">
+                      <div class="span4">
+                        <label>Search</label>
+                        <input type="text"  style="width:290px" ng-keyup="listAllProgram()" placeholder="Search" ng-model="searchTerm" ng-enter="searchFn()">
+                        <img ng-click="searchFn()" ng-src="img/system-search.png" style="padding-top: 10px; padding-bottom: 10px;cursor:pointer" />
+
+                    </div>
+					
+					<div style="float:right">
+				<label>Per page</label><select ng-change="index()"  ng-model="perpagenum" ng-options="x for x in perpage">
+					</select>
+				</div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style ="cursor:pointer" ng-click="!clickEnabled && sortBy('ProgramName')">
+							 Name
+								<span ng-if="pageNums2Disp.length > 0" ng-show="ProgramNameAsc" class="fa fa-caret-up"></span>
+								<span ng-if="pageNums2Disp.length > 0" ng-show="ProgramNameDesc" class="fa fa-caret-down"></span>
+								<span ng-if="pageNums2Disp.length > 0" ng-show="sortPropName" class="fa fa-sort"></span>
+							</th>
+						<input type="hidden" ng-model="sortName" />
+						<input type="hidden" ng-model="ProgramName" />
+						
+							
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-click="editItem(item._id)" ng-repeat="item in programs">
+                            <td>{{item.name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+				<div align="center" ng-if="1 < pageNums2Disp.length">
+                    <ul class="pagination">
+                        <li ng-class="{'disabled':firstDisabled()}"><a ng-click="first()">First |< </a>
+                        </li>
+                        <li ng-class="{'disabled':prevDisabled()}"><a ng-click="previous()">Previous << </a>
+                        </li>
+					  <li ng-repeat="i in pageNums2Disp" ng-class="{'disabled': currDisabled(i)}"><a ng-click="getPage(i)">{{i}}</a></li>
+					 
+                        <li ng-class="{'disabled': nextDisabled()}"><a ng-click="next()">Next >> </a>
+                        </li>
+                        <li ng-class="{'disabled':lastDisabled()}"><a ng-click="last()">Last >| </a>
+                        </li>
+                    </ul>
+                    <p align="center">Showing page {{currentPageNum}} of {{maxPageNum}}</p>
+                </div>
+                				<div align="center" ng-if="pageNums2Disp.length < 1">
+				<p>No records were found</p>                </div>
+            </div>
+        </div>
+    </div>
+</div>

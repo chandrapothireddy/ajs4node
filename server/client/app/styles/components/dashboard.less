@@ -1,0 +1,158 @@
+/*
+.applications-dashboard h1 {
+  text-align: center;
+  display: block;
+  background-color: white;
+  width: 100%;
+  height: 100px;
+  line-height: 120px;
+}
+
+.applications-dashboard label {
+  font-size: 17px;
+}
+
+.applications-dashboard p {
+  font-size: 16px;
+}
+*/
+
+
+
+// ---------------------------------------------------------
+//
+// Applications table
+//
+// ---------------------------------------------------------
+
+.capitalize {
+    text-transform: uppercase;
+}
+
+.table-applications {
+
+    p {
+        margin-bottom: 0;
+    }
+    
+    .time-ago {
+        font-size: 11px;
+    }
+    
+    .money {
+        font-size: 18px;
+        color: @blue;
+    }
+    
+    .area-desc {
+        margin-top: 10px;
+        float: left;
+    }
+    
+}
+
+// ---------------------------------------------------------
+//
+// Sales Rep Tray
+//
+// ---------------------------------------------------------
+.rep-tray {
+    
+    padding: 20px 0;
+    padding-left: 30px;
+    
+    .section-image {
+        margin-right: 10px;
+    }
+    
+    .section-contact {
+        //margin-top: 10px;
+    }
+    
+    p {
+        margin-bottom: 0;
+    }
+    
+}
+
+.dashboard.has-rep-tray {
+    
+    .applications-dashboard {
+        margin-top: 160px;
+    }
+    
+}
+
+.img-vendor {
+    padding: 15px;
+    background: white;
+}
+
+// ---------------------------------------------------------
+//
+// Dashboard Forms
+//
+// ---------------------------------------------------------
+
+.dashboard{
+    textarea,
+    input[type="text"],
+    input[type="password"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="date"],
+    input[type="month"],
+    input[type="time"],
+    input[type="week"],
+    input[type="number"],
+    input[type="email"],
+    input[type="url"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="color"]{
+        width: 100%;        
+    }
+    
+    .buyoutEditForm{ 
+        .span1 {
+            width: 60px;
+            padding: 8px 6px;
+            font-size: 11px;
+        }
+        .btn{
+            vertical-align: top;
+        }
+
+        .required,
+        .required-message {
+            display: none;
+        }
+
+        .ng-invalid {
+            border-color: @red;
+        }
+
+    }
+    
+    select{
+        width: 100%;
+    }
+    
+    .select2-container-multi .select2-choices{
+        min-height: 45px;
+        border: 2px solid #eeeeee;
+        -webkit-transition: border linear .2s, box-shadow linear .2s;
+        -moz-transition: border linear .2s, box-shadow linear .2s;
+        -o-transition: border linear .2s, box-shadow linear .2s;
+        transition: border linear .2s, box-shadow linear .2s;
+        background: #fff;
+    }
+    
+    textarea{
+        resize: vertical;
+    }
+}
+
+.quote-date {
+    margin-top: -40px;
+}

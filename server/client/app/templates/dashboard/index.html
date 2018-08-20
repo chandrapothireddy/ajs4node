@@ -1,0 +1,18 @@
+<div class="row has-no-tabs applications-dashboard">
+    <div class="span2 sidebar" ng-include="'app/templates/nav.html'"></div>
+    <div class="span10 offset2">
+        <div class="row">
+            <div my-rep></div>
+        </div>
+
+<span ng-bind="cro"></span>
+
+<cron-selection ng-model="myOutput" config="myConfig"></cron-selection>
+<input type="text"  ng-model="outdata" />
+<span ng-bind="myOutput"></span>
+      <input type="submit" ng-click="cronJ()" />
+    </div>
+</div>
+<script>
+
+</script>

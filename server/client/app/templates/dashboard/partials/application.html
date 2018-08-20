@@ -1,0 +1,27 @@
+<td class="inner-wrapper">
+<div class="pull-right text-right">
+    <p class="capitalize time-ago">{{application.created | timeElapsed }}</p>
+    <p class="money">{{application.quote.totalCost | cheddar}}</p>
+</div>
+<div class="pull-left">
+    <span class="label">{{application.status}}</span>
+    <p class="capitalize">{{application.company.contactPerson.name}}</p>
+    <span ng-show="application.company.contactPerson.contactMethod == 'phone'">
+        <a call-to="{{application.company.contactPerson.phone}}"></a>
+    </span>
+    <span ng-show="application.company.contactPerson.contactMethod == 'email'">
+        <a mail-to="{{application.company.contactPerson.email}}"></a>
+    </span>
+    <p>{{application.company.fullLegalBusinessName}} / 
+        <a ng-click='goTo("dashboard/vendors/" + application.vendorId._id)'><i class="icon-briefcase"></i> {{application.vendorId.name}}</a>
+    </p>
+</div>
+<div class="clear-fix area-desc">
+    <p>{{application.quote.description}}</p>
+</div> 
+</td>
+
+
+
+
+                    

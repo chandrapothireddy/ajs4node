@@ -1,0 +1,68 @@
+<div class="row-fluid">
+
+     <div class="span4 offset2">
+        <img class="logo" src="img/logo_login.png" title="Marlin Quoter" />
+     </div>
+
+    <div class="span4">
+        
+        <form class="well loginForm" id="loginForm" name="loginForm" ng-controller="loginController" ng-show="isPage('/login')" novalidate>
+        
+            <p class="alert alert-error" ng-show="message">{{message}}</p>
+            
+            <label for="email">Email</label>
+            <input autocomplete="off" type="email" class="input-block" required is-user="loginForm" placeholder="jsmith@marlinfinance.com" ng-model="email" name="email" ng-blur="Validator.validateField(loginForm.email, loginForm)">
+			
+            <div ng-show="loginForm.FacultyErrors.email" class="alert alert-error alert-tooltip">
+                {{loginForm.FacultyErrors.email}}
+            </div>
+            
+            <label for="password">Password</label>
+            <input autocomplete="off" type="password" class="input-block" required placeholder="password" ng-model="password" name="password" ng-blur="Validator.validateField(loginForm.password, loginForm)">
+
+            <div ng-show="loginForm.FacultyErrors.password" class="alert alert-error alert-tooltip">
+                {{loginForm.FacultyErrors.password}}
+            </div>
+            
+            <br />
+            
+            <button type="submit" class="btn btn-primary btn-block" id="login" ng-click="login()">Login <i ng-show="isProcessing" class="icon icon-spinner icon-spin"></i></button>
+            
+            <br /> 
+            
+            <a href="#/password_reset">Forgot Password</a>
+            
+            <br /><br />
+            
+            <!-- <p class="alert alert-info">Username is your Marlin email, before the @. Password is the same.</p> -->
+         
+        </form>
+        
+        <form class="well passwordForm" id="passwordForm" name="passwordForm" ng-controller="passwordResetController" ng-show="isPage('/password_reset')">
+
+            <p class="alert alert-{{status}}" ng-show="message">{{message}}</p>
+            
+            <label for="email">Email</label>
+            <input type="email" class="input-block" required placeholder="jsmith@marlinfinance.com" ng-model="email" name="email" is-user="passwordForm" ng-blur="Validator.validateField(passwordForm.email, passwordForm)">
+
+            <div ng-show="passwordForm.FacultyErrors.email" class="alert alert-error alert-tooltip">
+                {{passwordForm.FacultyErrors.email}}
+            </div>
+            
+            <br />
+            
+            <button type="submit" class="btn btn-primary btn-block" id="password" ng-click="passwordReset()">Email New Password <i ng-show="isProcessing" class="icon icon-spinner icon-spin"></i></button>
+            
+            <br /> 
+            
+            <a href="#/login">Login</a>
+            
+            <br /><br />
+            
+            <!-- <p class="alert alert-info">Username is your Marlin email, before the @. Password is the same.</p> -->
+         
+        </form> 
+                
+               
+    </div>
+</div>
